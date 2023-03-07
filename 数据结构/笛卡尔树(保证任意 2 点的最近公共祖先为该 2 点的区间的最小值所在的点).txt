@@ -1,0 +1,16 @@
+void build()
+{
+    stack<int> stk;
+    for (int i = 1;i <= n;i ++ )
+    {
+        int last = 0;
+        while (stk.size() && a[stk.top()] > a[i])
+        {
+            last = stk.top(); stk.pop();
+        }
+        if (!stk.empty()) r[stk.top()] = i;
+        else root = i; // 变为 根节点的 右节点 
+        l[i] = last;  // 跟新之前的为 左子树
+        stk.push(i);
+    }
+}

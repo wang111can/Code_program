@@ -1,0 +1,167 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long ll;
+const int N = 1e5 + 10, M = N * 2;
+
+int h[N], e[M], ne[M], idx, w[N];
+int dep[N], son[N], fa[N], sz[N], id[N], group[N], top[N];
+int n, m;
+
+struct Node
+{
+    int l, r;
+    ll sum;
+    int cg;
+}tr[N * 4];
+
+void add(int a, int b)
+{
+    e[idx] = b, ne[idx] = h[a], h[a] = idx ++ ;
+}
+
+void dfs(int u, int f, int deep)
+{
+    fa[u] = f; 
+    dep[u] = deep;
+    sz[u] = 1;
+    for (int i = h[u];~i;i = ne[i])
+    {
+        int t = e[i];
+        if (t == f) continue ;
+        dfs(t, u, deep + 1);
+        sz[u] += sz[t];
+        if (sz[son[u]] < sz[t]) son[u] = t; // 更新重子树
+    }
+}
+
+int ct;
+void dfs(int u, int p)
+{
+    id[u] = ++ ct; group[ct] = w[u], top[u] = p;  // 该重边的顶点
+    if (!son[u]) return ; // 叶节点
+    dfs(son[u], p);  // 优先处理重边  
+    for (int i = h[u];~i;i = ne[i])
+    {
+        int t = e[i];
+        if (t == fa[u] || t == son[u]) continue ;
+        dfs(t, t); // 重边的顶点一定是轻点
+    }
+}
+
+
+
+void pushup(int u)
+{
+    tr[u].sum = tr[u << 1].sum + tr[u << 1 | 1].sum;
+}
+
+void pushdown(int u)
+{
+    auto &root = tr[u], &left = tr[u << 1], &right = tr[u << 1 | 1];
+    if (root.cg)
+    {
+        left.cg += root.cg, left.sum += root.cg * (left.r - left.l + 1);
+        right.cg += root.cg, right.sum += root.cg * (right.r - right.l + 1);
+        root.cg = 0;
+    }
+}
+
+void build(int u, int l, int r)
+{
+    if (l == r){
+        tr[u] = {l, l, group[l], 0}; // dfs 序数组 进行线段树维护
+    }
+    else 
+    {
+        int mid = l + r >> 1;
+        tr[u] = {l, r};
+        build(u << 1, l, mid);
+        build(u << 1 | 1, mid + 1, r);
+        pushup(u);
+    }
+}
+
+void update(int u, int l, int r, int k)
+{
+    if (tr[u].l >= l && tr[u].r <= r)
+    {
+        tr[u].cg += k;
+        tr[u].sum += (tr[u].r - tr[u].l + 1) * k;
+    }
+    else
+    {
+        pushdown(u);
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (l <= mid) update(u << 1, l, r, k);
+        if (r > mid) update(u << 1 | 1, l, r, k);
+        pushup(u);
+    }
+}
+
+ll ask(int u, int l, int r)
+{
+    if (tr[u].l >= l && tr[u].r <= r) return tr[u].sum;
+    else {
+        ll res = 0;
+        pushdown(u);
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (l <= mid) res += ask(u << 1, l, r);
+        if (r > mid) res += ask(u << 1 | 1, l, r);
+        return res ;
+    }
+}
+
+ll ask_tree(int u)
+{
+    return ask(1, id[u], id[u] + sz[u] - 1); // 子树为连续的字段
+}
+
+ll ask_path(int u, int v)
+{
+    ll res = 0;
+    while (top[u] != top[v]) // 爬山法
+    {
+        if (dep[top[u]] < dep[top[v]]) swap(u, v); // 深的优先
+        res += ask(1, id[top[u]], id[u]) ;// 重链的编号是连续的
+        u = fa[top[u]]; //走到父节点
+    }
+    
+    if (dep[u] < dep[v]) // 到达同一根重链
+        swap(u, v);
+    res += ask(1, id[v], id[u]);
+    
+    return res ;
+}
+
+void update_tree(int u, int k)
+{
+    update(1, id[u], id[u] + sz[u] - 1, k);
+}
+
+void update_path(int u, int v, int k)
+{
+    while (top[u] != top[v])
+    {
+        if (dep[top[u]] < dep[top[v]]) swap(u, v);
+        update(1, id[top[u]], id[u], k);
+        u = fa[top[u]];
+    }
+     if (dep[u] < dep[v]) swap(u, v);
+    update(1, id[v], id[u], k);
+}
+
+
+int main()
+{
+    scanf("%d", &n);
+    memset(h, -1, sizeof h);
+    dfs(1, -1, 1); // 预处理
+    dfs(1, 1); // 计算重边
+    build(1, 1, n);
+
+    return 0;
+}

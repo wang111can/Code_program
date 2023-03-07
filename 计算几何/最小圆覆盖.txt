@@ -1,0 +1,133 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+#define x first
+#define y second
+#define PI  acos(-1) // 
+typedef pair<double, double> PDD;
+
+const double eps = 1e-12;
+// 
+const int N = 1e5 + 10;
+
+PDD q[N];
+int n;
+
+int cmp(double x, double y)  // 比较函数
+{ 
+    if (fabs(x - y) < eps) return 0; // 相等
+    if (x < y) return -1; // x < y
+    return 1; // x > y
+}
+
+PDD operator* (PDD a, double t)
+{
+    return {a.x * t, a.y * t};
+}
+
+PDD operator+ (PDD a, PDD b)
+{
+    return {a.x + b.x, a.y + b.y};
+}
+
+PDD operator- (PDD a, PDD b)
+{
+    return {a.x - b.x, a.y - b.y} ;
+}
+
+double operator* (PDD a, PDD b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+PDD operator/ (PDD a, double b)
+{
+    return {a.x / b, a.y / b};
+}
+
+PDD rotate(PDD a, double angle)
+{ 
+    return PDD(a.x * cos(angle) + a.y * sin(angle), -a.x * sin(angle) + a.y * cos(angle));
+}
+
+pair<PDD, PDD> get_vert(PDD a, PDD b) //向量 ab 的中垂线 
+{
+
+    return {(a + b) / 2, rotate(b - a, PI / 2)} ;
+    
+}
+
+// 向量 pv 向量 qw
+PDD get_dot(PDD p, PDD v, PDD q, PDD w)
+{
+    auto u = p - q;
+    double t = w * u / (v * w);
+    return p + v * t ;
+}
+struct circle
+{
+    double r; 
+    PDD q;
+};
+
+double get_dis(PDD a, PDD b)
+{
+    double dx = a.x - b.x;
+    double dy = a.y - b.y;
+    return sqrt(dx * dx + dy * dy);
+}
+
+circle get_circle(PDD a, PDD b, PDD c)
+{
+    // 中垂线
+    auto l1 = get_vert(a, b);
+    auto l2 = get_vert(a, c);
+    
+    // 交点
+    PDD dot = get_dot(l1.x, l1.y, l2.x, l2.y);// 圆心
+    
+    return {get_dis(a, dot), dot};
+    
+}
+
+
+int main()
+{
+    cin >> n;
+    for (int i = 0;i < n;i ++ ) cin >> q[i].x >> q[i].y;
+    random_shuffle(q, q + n);
+    
+    circle c = {0 ,q[0]};
+    for (int i = 1;i < n;i ++ )
+    {
+        // r < dist 点不在圆内
+        if (cmp(c.r, get_dis(c.q, q[i])) < 0)
+        {
+            c = {0 ,q[i]};
+            for (int j = 0;j < i;j ++ )
+            {
+                if (cmp(c.r, get_dis(c.q, q[j])) < 0)
+                {
+                    // 半径 圆心
+                    c = {get_dis(q[i], q[j]) / 2, (q[i] + q[j]) / 2} ;
+                    for (int k = 0;k < j;k ++ )
+                    {
+                        if (cmp(c.r, get_dis(c.q, q[k])) < 0)
+                            c = get_circle(q[i], q[j], q[k]);
+                    }
+            
+                }    
+            }
+        }
+        
+    }
+    
+    printf("%.10lf\n", c.r);
+    printf("%.10lf %.10lf", c.q.x, c.q.y);
+    
+    
+    return 0;
+}

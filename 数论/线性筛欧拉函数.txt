@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+const int N=10e6+10;
+
+int phi[N],g[N];
+int n,cnt;
+bool st[N];
+
+int main()
+{
+    cin >> n;
+    phi[1]=1;
+    for(int i = 2;i<= n;i ++ )
+    {
+
+        if (!st[i])
+		{
+
+            g[cnt ++ ] = i;
+            phi[i] = i - 1 ;
+        }
+        for(int j = 0;g[j] <= n / i;j ++ )
+        {
+            st[g[j] * i] = true;
+            if (i % g[j])
+            {
+                phi[g[j] * i] = phi[i] * g[j];
+                break;
+            }
+            phi[g[j] * i] = (g[j] - 1) * phi[i];
+        }
+    }
+    return 0;
+}

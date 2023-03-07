@@ -1,0 +1,87 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+const int N = 1e4 + 10, S = 55, M = 1e6 + 10;
+
+int tr[N * S][26], cnt[N * S], idx, ne[N * S];
+char a[M];
+
+void insert(string str)
+{
+    int p = 0;
+    for (int i = 0;str[i];i ++ )
+    {
+        int t = str[i] - 'a';
+        if (!tr[p][t]) tr[p][t] = ++ idx;
+        p = tr[p][t];
+    }
+    cnt[p] ++ ;
+}
+
+void ackmp()
+{
+    queue<int> q;
+    for (int i = 0;i < 26;i ++ )
+        if (tr[0][i]) q.push(tr[0][i]); // 从第一层开始往下拓展
+        
+    while (q.size())
+    {
+        int t = q.front(); q.pop();
+        
+        for (int i = 0;i < 26;i ++ )
+        {
+            int c = tr[t][i]; // t 的子节点
+            if (!c) tr[t][i] = tr[ne[t]][i];
+            else
+            {
+                ne[c] = tr[ne[t]][i];
+                q.push(c);
+            }
+            
+        }
+    }
+}
+int n;
+
+int main()
+{
+    int T; cin >> T;
+    while (T -- )
+    {
+        idx = 0;
+        memset(tr, 0, sizeof tr);
+        memset(cnt, 0, sizeof cnt);
+        memset(ne, 0, sizeof ne);
+        cin >> n;
+        for (int i = 1;i <= n;i ++ ){
+            string str; cin >> str;
+            insert(str);
+        }
+       
+        ackmp();
+       
+        string str; cin >> str;
+        
+        int ans = 0;
+        for (int i = 0, j = 0;str[i];i ++ )
+        {
+            int t = str[i] - 'a';
+         //   if (!tr[j][t]) continue ;
+            j = tr[j][t];
+           int p = j;
+           while (p)
+           {
+               ans += cnt[p];
+               cnt[p] = 0;
+               p = ne[p];
+           }   
+        }
+        cout << ans << endl;
+    }
+    
+    return 0;
+}

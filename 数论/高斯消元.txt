@@ -1,0 +1,38 @@
+
+int Gauss()
+{
+    int col, row = 0;
+    for (col = 0;col < n;col ++ )
+    {
+        int t = row;
+        for (int i = row;i < n;i ++ )
+            if (fabs(a[i][col]) > fabs(a[t][col])) t = i; // 求出该列 最大的 未知数的系数
+
+        if (fabs(a[t][col]) < 1e-8) continue ; // 该列最大的 系数 为 0 就没有必要 更新了
+
+        for (int i = col;i <= n;i ++ ) swap(a[t][i], a[row][i]); //把该列换到 当前处理的最高行
+
+        for (int i = n;i >= col;i -- ) a[row][i] /= a[row][col]; // 把最大项系数变为 1
+
+        for (int i = row + 1;i < n;i ++ ) // 把其他未处理的 行的当前列系数变为 0 
+            if (fabs(a[i][col]) > 1e-8) // 当前项不为 0 
+                for (int j = n;j >= col;j -- )
+                    a[i][j] -= a[row][j] * a[i][col]; // 同加减
+
+        row ++ ;
+    }
+
+    if (row < n) 
+    {
+        for (int i = row;i < n;i ++ ) 
+            if (fabs(a[i][n]) > 1e-8) 
+                return 2; // 出现了 0 != 0 的情况
+        return 1;
+    }
+
+    for (int i = n - 1;i >= 0;i -- ) // 从下当上求每一组方程的解
+        for (int j = i + 1;j < n;j ++ )
+            a[i][n] -= a[i][j] * a[j][n]; // 上一层的解 == 把下一层的解带入求解
+
+    return 0;
+}

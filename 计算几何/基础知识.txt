@@ -1,0 +1,114 @@
+// 几何计算运算符重载
+// 
+PDD operator* (PDD a, double t)
+{
+    return {a.x * t, a.y * t};
+}
+
+PDD operator+ (PDD a, PDD b)
+{
+    return {a.x + b.x, a.y + b.y};
+}
+
+PDD operator- (PDD a, PDD b)
+{
+    return {a.x - b.x, a.y - b.y} ;
+}
+
+double operator* (PDD a, PDD b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+
+// 余弦定理 c^2 = a^ 2 + b^2 - 2 * a * b * cos(ab夹角)
+
+
+namespace math
+{
+    int cmp(double x, double y)  // 比较函数
+    { 
+        if (fabs(x - y) < eps) return 0; // 相等
+        if (x < y) return -1; // x < y
+        return 1; // x > y
+    }
+    
+    // 以起点到源点的向量 为 基准 
+    //内积（点积） A·B = |A||B|cos(C)
+    double dot(PII a, PII b){ return a.x * b.x + a.y * b.y; }
+    double dot(PDD a, PDD b){ return a.x * b.x + a.y * b.y; }
+    
+    // 外积（叉积） AxB = |A||B|sin(C) 由 A and B 构成三角形面积的 2 倍
+    // B在A的逆时针方向为正 否则为 负 
+    // A and B 构成平行四边形面积
+    double cross(PII a, PII b){ return a.x * b.y - b.x * a.y; }
+    double cross(PDD a, PDD b){ return a.x * b.y - b.x * a.y; }
+
+	// |a| 模长
+    double get_len(PII a){ return sqrt(dot(a, a)); }
+    double get_len(PDD a){ return sqrt(dot(a, a)); }  
+	
+	// 向量 ac 在 ab 上投影的长度
+    double project(PDD a, PDD b, PDD c)
+	{
+		return ((b - a) & (c - a)) / get_len(b - a);
+	}
+
+
+
+    // 计算向量夹角
+     double get_angle(PII a, PII b){ return acos(dot(a, b) / get_length(a) / get_length(b)); }
+     double get_angle(PDD a, PDD b){ return acos(dot(a, b) / get_length(a) / get_length(b)); }
+    // 向量A顺时针旋转C的角度
+    PII rotate(PII a, double angle){ return PII(a.x * cos(angle) + a.y * sin(angle), -a.x * sin(angle) + a.y * cos(angle)); }
+    PDD rotate(PDD a, double angle){ return PDD(a.x * cos(angle) + a.y * sin(angle), -a.x * sin(angle) + a.y * cos(angle)); }
+    
+    
+    // a 为弧度 
+	// 角度 为 a / 180 * pi
+	// pi = acos(-1)	
+    //1 直线定理
+    //(1) 一般式 ax + by + c = 0
+    //(2) 点向式 p0 + vt
+    //(3) 斜截式 y = kx + b
+
+	// 两 直线的交点
+	PDD get_dot(PDD p, PDD v, PDD q, PDD w)
+	{
+  	  	auto u = p - q;
+   	 	double t = w * u / (v * w);
+   	 	return p + v * t ;
+	}
+	// 三维
+	//1. 三维向量表示(x, y, z)
+	//2. 向量加减法、数乘运算，与二维相同
+	//3. 模长 |A| = sqrt(x * x + y * y + z * z)
+	//4. 点积
+
+    //	(1) 几何意义：A·B = |A| * |B| * cos(C)
+    //	(2) 代数求解：(x1, y1, z1) · (x2, y2, z2) = (x1x2, y1y2, z1z2);
+		double thrdot(pari<double, PDD> a, pari<double, PDD> b)
+		{
+			 return a.x * b.x + a.y.x * b.y.x + a.y.y * b.y.y ;
+		}	
+//5. 叉积
+    //	(1) 几何意义：AxB = |A| * |B| * sin(C)，方向：右手定则
+    //	(2) 代数求解：AxB =
+				 (y1z2 - z1y2, z1x2 - x1z2, x1y2 - x2y1)
+		PDD thrcross(pari<double, PDD> a, pari<double, PDD> b)
+		{
+			// 模长 
+			// 方向 
+		}
+	
+//6. 如何求平面法向量
+    //	 任取平面上两个不共线的向量A、B：AxB
+	//7. 判断点D是否在平面里
+    //	任取平面上两个不共线的向量A、B：先求法向量C = AxB，然后求平面上任意一点到D的向量E与C的点积，判断点积是否为0。
+	//8. 求点D到平面的距离
+    //	任取平面上两个不共线的向量A、B：先求法向量C = AxB。然后求平面上任意一点到D的向量E在C上的投影长度即可。即：E·C / |C|
+	//9. 多面体欧拉定理
+    //	顶点数 - 棱长数 + 表面数 = 2
+	//10. 三维凸包
+
+};

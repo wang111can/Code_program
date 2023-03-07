@@ -1,0 +1,44 @@
+
+int n;
+LL f[N], uf[N]; // i 的阶层 与 逆元
+
+LL get_(int a, int k, int p)
+{
+    LL res = 1;
+    while (k)
+    {
+        if (k & 1) res = (LL)res * a % p;
+        a = (LL)a * a % p;
+        k >>= 1;
+    }
+    return res;
+}
+
+void init()
+{
+    f[0] = uf[0] = 1; // 规定 0 的阶乘 为 0
+    
+    for (int i = 1;i < N;i ++ )
+    {
+        f[i] = i * f[i - 1] % mod;
+        // 逆元公式 
+        uf[i] = uf[i - 1] * get_(i, mod - 2, mod) % mod;
+        
+    }
+    
+    
+}
+
+int main()
+{
+    cin >> n;
+    
+    init();
+    while (n -- )
+    {
+        int a, b; cin >> a >> b;
+        cout << f[a] * uf[b] % mod * uf[a - b] % mod << endl;
+    }
+    
+    return 0;
+}

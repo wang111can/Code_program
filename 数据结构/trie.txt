@@ -1,0 +1,25 @@
+// tr[p][t] // tr[] 代表 字符串总长度
+
+void insert(string str)
+{
+    int p = 0;
+    for (auto i : str)
+    {
+        int t = i - 'a';
+        if (!trie[p][t]) trie[p][t] =  ++ idx;
+        p = trie[p][t];
+    }
+    cnt[p] ++ ;
+}
+
+int query(string str)
+{
+    int p = 0;
+    for (auto i : str)
+    {
+        int t = i - 'a';
+        if (!trie[p][t]) return 0;
+        p = trie[p][t];
+    }
+    return cnt[p];
+}

@@ -1,0 +1,49 @@
+
+int h[N], e[M], ne[M], idx;
+int l[N], r[N], tot, sz[N], hs[N], id[N];
+
+void dfs_init(int u, int f)
+{
+    l[u] = ++ tot;
+    id[tot] = u;
+    sz[u] = 1
+    hs[u] = -1;
+    for (int i = h[u];~i;i = ne[i])
+    {
+        int j = e[i];
+        if (j == f) continue ;
+        dfs(j, u);
+        sz[u] += sz[j];
+        if (hs[u] == -1 || sz[j] > sz[hs[u]]) hs[u] = j; // 跟新重儿子
+    }
+    r[u] = tot;
+}
+
+void dfs(int u, int f, bool keep)
+{
+    for (int i = h[u];~i;i = ne[i])
+    {
+        int j = e[i];
+        if (j != hs[u] && j != f) dfs(j, u, false); // 处理轻儿子
+
+    }
+
+    if (hs[u] != -1) dfs(hs[u], u, true);
+    
+    for (int i = h[u];~i;i = ne[i])
+    {
+        int j = e[i];
+        if (j != f && j != hs[u]) {
+            for (int t = l[j];t <= r[j];t ++ )
+                add(id[t]); // 添加轻儿子信息
+        }
+    }
+    add(u); // 加入u 
+    if (!keep) // 轻儿子则删除
+    {
+        for (int i = l[u];i <= r[u];i ++ )
+         del(id[i]);
+    }
+    
+}
+

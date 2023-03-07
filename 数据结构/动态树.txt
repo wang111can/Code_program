@@ -1,0 +1,147 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+struct Node 
+{
+    int s[2], v, p;
+    int cg, sum;
+}tr[N];
+int n, m;
+
+/*
+0 x y，表示询问点 x 到点 y 之间的路径上的所有点（包括两端点）的权值的异或和。保证 x 和 y 之间存在连通路径。
+1 x y，表示在点 x 和点 y 之间增加一条边 (x,y)。注意：如果两点已经处于连通状态，则无视该操作。
+2 x y，表示删除边 (x,y)。注意：如果该边不存在，则无视该操作。
+3 x w，表示将点 x 的权值修改为 w。*/
+
+void revolve(int u)
+{
+    swap(tr[u].s[0], tr[u].s[1]);
+    tr[u].cg ^= 1;
+}
+void pushdown(int u)
+{
+    if (tr[u].cg)
+    {
+        if (tr[u].s[0])
+        revolve(tr[u].s[0]);
+        if (tr[u].s[1])
+        revolve(tr[u].s[1]);
+        tr[u].cg = 0;
+    }
+}
+
+void pushup(int u)
+{
+    tr[u].sum = tr[tr[u].s[0]].sum ^ tr[tr[u].s[1]].sum ^ tr[u].v;
+}
+
+bool isroot(int u)
+{
+    return tr[tr[u].p].s[0] != u && tr[tr[u].p].s[1] != u;
+}
+
+
+void rotate(int x)
+{
+    int y = tr[x].p, z = tr[y].p;
+    int k = tr[y].s[1] == x;
+    if (!isroot(y)) 
+        tr[z].s[tr[z].s[1] == y] = x;
+    tr[x].p = z;
+    tr[y].s[k] = tr[x].s[k ^ 1], tr[tr[x].s[k ^ 1]].p = y;
+    tr[x].s[k ^ 1] = y, tr[y].p = x;
+    pushup(y), pushup(x);
+}
+
+int stk[N]; 
+void splay(int x)  // splay操作
+{
+    int top = 0, r = x;
+    stk[ ++ top] = r; // 从下 往上更新
+    while (!isroot(r)) stk[ ++ top] = r = tr[r].p;
+    while (top) pushdown(stk[top -- ]);
+    while (!isroot(x))
+    {
+        int y = tr[x].p, z = tr[y].p;
+        if (!isroot(y))
+            if ((tr[y].s[1] == x) ^ (tr[z].s[1] == y)) rotate(x);
+            else rotate(y);
+        rotate(x);
+    }
+}
+
+void access(int x)  // 建立一条从根到x的路径，同时将x变成splay的根节点
+{
+    int z = x;
+    for (int y = 0; x; y = x, x = tr[x].p)
+    {
+        splay(x);
+        tr[x].s[1] = y, pushup(x);
+    }
+    splay(z);
+}
+
+void makeroot(int x)  // 将x变成原树的根节点
+{
+    access(x);
+    revolve(x);
+}
+
+int findroot(int x)  // 找到x所在原树的根节点, 再将原树的根节点旋转到splay的根节点
+{
+    access(x);
+    while (tr[x].s[0]) pushdown(x), x = tr[x].s[0];
+    splay(x);
+    return x;
+}
+
+void split(int x, int y)  // 给x和y之间的路径建立一个splay，其根节点是y
+{
+    makeroot(x);
+    access(y);
+}
+
+void link(int x, int y)  // 如果x和y不连通，则加入一条x和y之间的边
+{
+    makeroot(x);
+    if (findroot(y) != x) tr[x].p = y;
+}
+
+void cut(int x, int y)  // 如果x和y之间存在边，则删除该边
+{
+    makeroot(x);
+    if (findroot(y) == x && tr[y].p == x && !tr[y].s[0])
+    {
+        tr[x].s[1] = tr[y].p = 0;
+        pushup(x);
+    }
+}
+
+int main()
+{
+    cin >> n >> m;
+    for (int i = 1;i <= n;i ++ ) scanf("%d", &tr[i].v);
+    
+    int op, x, y;
+    while (m -- )
+    {
+        cin >> op >> x >> y;
+        if (!op)
+        {
+            split(x, y);
+            cout << tr[y].sum << endl;
+        }
+        else if (op == 1) link(x, y);
+        else if (op == 2) cut(x, y);
+        else {
+            makeroot(x);
+            tr[x].v = y;
+        }
+    }
+    
+    return 0;
+}

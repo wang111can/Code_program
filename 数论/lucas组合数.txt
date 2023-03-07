@@ -1,0 +1,54 @@
+#include <iostream>
+
+using namespace std;
+
+typedef long long LL ;
+
+LL a, b, mod;
+int n;
+
+int get_(int a,int b)
+{
+    int res = 1;
+    while (b)
+    {
+        if (b & 1)res = (LL)res * a % mod;
+        a = (LL)a * a % mod;
+        b >>= 1;
+    }
+    return res;
+}
+
+
+LL C(int a, int b)
+{
+    if (a < b) return 0;
+    
+    LL res = 1;
+    for(int i = 1, j = a;i <= b;i ++, j -- )//i<=b而不是<
+    {
+        res = (LL)res * j % mod;
+        res = (LL)res * get_(i, mod - 2) % mod;
+    }
+    
+    return res;
+}
+
+LL lucas(LL a, LL b)
+{
+    if (a < mod && b < mod) return C(a, b) ;
+    //a % p 后肯定是 < p 的,所以可以用C(),但 a / p 后不一定 < p 所以用 lucas 继续递归
+    return lucas(a / mod, b / mod) * C(a % mod, b % mod) % mod;
+}
+
+int main()
+{
+    cin >> n;
+    while (n -- )
+    {
+        cin >> a >> b >> mod ;
+        cout << lucas(a, b) << endl;
+    }
+    
+    return 0;
+}

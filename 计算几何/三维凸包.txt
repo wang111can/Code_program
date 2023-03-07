@@ -1,0 +1,149 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define io std::ios::sync_with_stdio(false),cin.tie(0),cout.tie(0);
+#define x first
+#define y second
+#define fr front
+#define db double
+#define pb push_back
+#define pi acos(-1) 
+
+typedef pair<int, int> PII;
+typedef pair<double, double > PDD;
+typedef long long LL ;
+typedef unsigned long long ULL;
+const double eps = 1e-10;
+
+const int N = 250;
+
+
+// 三维凸包模板
+db rand_eps()
+{
+    return ((db)rand() / RAND_MAX - 0.5) * eps; 
+}
+struct point
+{
+    db x, y, z;
+    
+    void shake()
+    {
+        x = x + rand_eps(), y = y + rand_eps(), z = z + rand_eps();
+    } 
+    
+    point operator- (point v)
+    {
+        return {x - v.x, y - v.y, z - v.z};
+    }
+    
+    double operator& (point t) // 点积
+    {
+        return x * t.x + y * t.y + z * t.z;
+    }
+    
+    // (y1z2 - z1y2, z1x2 - x1z2, x1y2 - x2y1)
+    point operator* (point v) // 叉积
+    {
+        return {y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - v.x * y};
+    }
+
+    db len()
+    {
+        return sqrt(x * x + y * y + z * z);  
+    }
+}q[N];
+
+struct Plane
+{   
+    int dt[5]; // 任意三点构成一个平面
+    
+    point norm() // 法向量
+    {   
+        // 平面内 2 条向量 的 叉积 为该平面法向量
+        return (q[dt[1]] - q[dt[0]]) * (q[dt[2]] - q[dt[0]]) ;
+    }
+    
+    db area()// 面积
+    {
+        return norm().len() / 2 ;
+    }
+    
+    // 在平面上 or 上方
+    bool above(point a)
+    {   
+        // 向量 q[dt[0]] a 在法向量上的投影
+        return ((a - q[dt[0]]) & norm()) >= 0; //
+        
+    }
+  
+   
+}plane[N], np[N];
+
+int n, m;
+bool g[N][N]; // 变 xy 构成的 2 个三角形 是否 为 阴暗分界线
+
+void get_3d()
+{
+    // 正反平面
+    plane[m ++ ] = {0, 1, 2};
+    plane[m ++ ] = {2, 1, 0}; 
+    
+    for (int i = 3;i < n;i ++ )
+    {
+        int cnt = 0;
+        for (int j = 0;j < m;j ++ )
+        {
+            bool t = plane[j].above(q[i]);
+            if (!t) // 在平面下 则可以保留当前平面
+                np[cnt ++ ] = plane[j];
+            for (int k = 0;k < 3;k ++ )
+                g[plane[j].dt[k]][plane[j].dt[(k + 1) % 3]] = t; 
+                //  标记 该平面的边能否被 阳面照到
+                // 若 点 q[i] 在平面上则 该平面 为 阳面 可以被照到
+        
+        }
+        
+        for (int j = 0;j < m;j ++ )
+            for (int k = 0;k < 3;k ++ )
+            {
+                int a = plane[j].dt[k], b = plane[j].dt[(k + 1) % 3];
+                if (g[a][b] && !g[b][a]) // 由 a b 组成的两侧 平面 为 阴 and 暗 声明 ab 为删除阳面平面的分界线
+                    np[cnt ++ ] = {a, b, i} ;// 新形成的平面           
+            }
+        m = cnt ;
+        for (int j = 0;j < m;j ++ )
+            plane[j] = np[j];
+    }
+    
+}
+
+void solve()
+{
+    cin >> n;
+    for (int i = 0;i < n;i ++ )
+    {
+        db x, y, z; cin >> x >> y >> z;
+        q[i] = {x, y, z};
+        q[i].shake() ;
+    }
+    
+    get_3d();
+    
+    db ans = 0;
+    for (int i = 0;i < m;i ++ ) // m为平面数
+        ans += plane[i].area();
+        
+    printf("%lf", ans);
+}
+
+int main()
+{
+	io;
+    int T; T = 1 ;
+    while (T -- )
+    {
+        solve();
+    }
+	return 0;
+}
