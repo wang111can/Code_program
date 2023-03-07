@@ -1,57 +1,94 @@
-#include <cstring>
-#include <iostream>
-#include <algorithm>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-typedef pair<int,int> PII;
-const int N = 4, INF = 100;
+#define io std::ios::sync_with_stdio(false),cin.tie(0),cout.tie(0);
+#define x first
+#define y second
+#define fr front
+#define db double
+#define pb push_back
+#define pi acos(-1) 
+#define all(x) x.begin(), x.end()
+mt19937_64 mrand(random_device{}());
 
-int change[N][N];
+typedef pair<int, int> PII;
+typedef pair<double, double > PDD;
+typedef long long ll ;
+typedef unsigned long long ull;
+const double eps = 1e-8;
+const int inf = 0x3f3f3f3f;
+const ll INF = 1e18;
 
-int get(int x, int y)
-{
-    return x * N + y;
+
+
+int n;
+int g[10][10], c[10][10];
+
+vector<pair<int, int>> step;
+
+void op(int x, int row) {
+    for (int i = 0;i < 4;i ++ ) {
+        if (x >> i & 1) {
+            for (int j = 1;j <= 4;j ++ ) {
+                c[row][j] = !c[row][j];
+            }
+            for (int j = 1;j <= 4;j ++ ) {
+                c[j][i + 1] = !c[j][i + 1];
+            }
+            c[row][i + 1] = !c[row][i + 1];
+            step.push_back({row, i + 1});
+        }
+    }
+
 }
 
-int main()
-{
-    for (int i = 0; i < N; i ++ )
-        for (int j = 0; j < N; j ++ )
-        {
-            for (int k = 0; k < N; k ++ ) change[i][j] += (1 << get(i, k)) + (1 << get(k, j));
-            change[i][j] -= 1 << get(i, j);
-        }
-
-    int state = 0;
-    for (int i = 0; i < N; i ++ )
-    {
-        string line;
-        cin >> line;
-        for (int j = 0; j < N; j ++ )
-            if (line[j] == '+')
-                state += 1 << get(i, j);
-    }
-
-    vector<PII> path;
-    for (int i = 0; i < 1 << 16; i ++ )
-    {
-        int now = state;
-        vector<PII> temp;
-        for (int j = 0; j < 16; j ++ )
-            if (i >> j & 1)
-            {
-                int x = j / 4, y = j % 4;
-                now ^= change[x][y];
-                temp.push_back({x, y});
+void solve() {
+    for (int i = 1;i <= 4;i ++ ) {
+        for (int j = 1;j <= 4;j ++ ) {
+            char ch; cin >> ch;
+            if (ch == '+') {
+                g[i][j] = 1;
             }
-        if (!now && (path.empty() || path.size() > temp.size())) path = temp;
+            else g[i][j] = 0;
+        }
+    }
+    vector<pair<int, int>> ans;
+    for (int i = 0;i < (1 << 4);i ++ ) {
+        for (int j = 0;j < (1 << 4);j ++ ) {
+            for (int z = 0;z < (1 << 4);z ++ ) {
+                for (int k = 0;k < (1 << 4);k ++ ) {
+                    memcpy(c, g, sizeof g);
+                    step.clear();
+                    op(i, 1), op(j, 2), op(z, 3), op(k, 4);
+                    bool success = true;
+                    for (int i = 1;i <= 4;i ++ ) {
+                        for (int j = 1;j <= 4;j ++ ) {
+                            if (c[i][j]) {
+                                success = false;
+                            }
+                        }
+                    }
+                    if (success) {
+                        if (ans.empty() || ans.size() > step.size()) {
+                            ans = step;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    cout << ans.size() << endl;
+    for (auto p:ans) {
+        cout << p.x << ' ' << p.y << endl;
     }
 
-    cout << path.size() << endl;
-    for (auto &p : path)
-        cout << p.first + 1 << ' ' << p.second + 1 << endl;
 
-    return 0;
+}
+
+int main() {
+	io; int T; T = 1;
+    while (T -- ){
+        solve();
+    }
+	return 0;
 }
