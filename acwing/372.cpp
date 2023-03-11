@@ -64,6 +64,7 @@ void solve() {
     cout << ans << endl;
 }
 
+
 int main() {
 	io; int T; T = 1;
     while (T -- ){
