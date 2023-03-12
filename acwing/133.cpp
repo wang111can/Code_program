@@ -65,6 +65,10 @@ void solve() {
         if (i % t == 0) cout << u << ' ';
     }
 
+
+
+
+
 }
 
 int main()
