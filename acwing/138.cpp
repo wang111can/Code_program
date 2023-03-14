@@ -14,34 +14,39 @@ mt19937_64 mrand(random_device{}());
 typedef pair<int, int> PII;
 typedef pair<double, double > PDD;
 typedef long long ll ;
-typedef unsigned long long ULL;
+typedef unsigned long long ull;
 const double eps = 1e-8;
 const int inf = 0x3f3f3f3f;
 const ll INF = 1e18;
 
-const int N = 300010;
+int x = 27;
+int n, m;
+ull s[1000010], p[1000010];
+char str[1000010];
 
-int a[N];
-// s[i] - 前面最小的
-int q[N];
+ull get_(int r, int l) {
+    return s[r] - s[l - 1] * p[r - l + 1];
+} 
+
 void solve() {
-
-    int n, k; cin >> n >> k;
-    int ans = -0x3f3f3f3f, sum = 0, hh = 0, tt = 0;
-    
-
-    vector<int> s(n + 1, 0);
+    p[0] = 1;
+    cin >> str + 1;
+    n = strlen(str + 1);
     for (int i = 1;i <= n;i ++ ) {
-        cin >> a[i];
-        s[i] = s[i - 1] + a[i];
-        if (hh <= tt && i - q[hh] > k) hh ++ ;
-        ans = max(ans, s[i] - s[q[hh]]);
-        while (hh <= tt && s[q[tt]] >= s[i]) tt -- ;
+        s[i] = s[i - 1] * x + str[i] - 'a' + 1;
+        p[i] = p[i - 1] * x;
+    }    
+    cin >> m;
 
-        q[++ tt] = i;
+    while (m -- ) {
+        int a, b, c, d; cin >> a >> b >> c >> d;
+        ull l = get_(b, a), r = get_(d, c);
         
+        if (l == r) {
+            cout << "Yes" << endl;
+        }
+        else cout << "No" << endl;
     }
-    cout << ans << endl;
 
 }
 
@@ -52,3 +57,4 @@ int main() {
     }
 	return 0;
 }
+//  --allow-unrelated-histories
