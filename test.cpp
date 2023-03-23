@@ -1,110 +1,66 @@
-#include <iostream>
-#include <cstring>
-#include <algorithm>
+#include <windows.h>
 
-using namespace std;
+/* This is where all the input to the window goes to */
+LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
+    switch(Message) {
 
-const int N = 9, M = 1 << N;
-
-int cnt[M], mp[M];// 分别求每一个状态对应的1 的个数 与 状态对应的值
-int c[N], r[N], g[3][3]; // 行列九宫格可用状态
-char str[100];
-
-void init()
-{
-    for (int i = 0;i < N;i ++ ) c[i] = r[i] = M - 1;
-
-    for (int i = 0;i < 3;i ++ )
-    for (int j = 0;j < 3;j ++ )
-        g[i][j] = M - 1;
-}
-
-void draw(int x, int y, int t, bool flag)
-{
-    // 画点
-    if (flag) str[x * N + y] = t + '1';
-    else str[x * N + y] = '.';
-    
-    
-    // 更改状态
-    int v = 1 << t;
-    if (!flag) v = -v;
-    
-    c[x] -= v;
-    r[y] -= v;
-    g[x / 3][y / 3] -= v;
-}
-
-int get_state(int x, int y)// 返回 行列九宫格里的 & 集
-{
-    return c[x] & r[y] & g[x / 3][y / 3];
-}
-
-int lowbit(int x)  // 返回末尾的1
-{
-    return x & -x;
-}
-
-
-bool dfs(int t)
-{
-    if (!t) return true;
-    
-    int x, y, sta = 10;// 优先从可选点数最小开始枚举
-    for (int i = 0;i < N;i ++ )
-    for (int j = 0;j < N;j ++ )
-        if (str[i * N + j] == '.')
-        {
-            int state = get_state(i, j);
-            if (cnt[state] < sta )
-            {
-                sta = cnt[state];
-                x = i;
-                y = j;
-            }
+        /* Upon destruction, tell the main thread to stop */
+        case WM_DESTROY: {
+            PostQuitMessage(0);
+            break;
         }
-        
-    int state = get_state(x, y);
-    // 以二进制序列从低位到高位依次枚举数
-    for (int i = state; i; i -= lowbit(i))
-    {
-        int z = mp[lowbit(i)];
-        draw(x, y, z, true);
-        if (dfs(t - 1)) return true;
-        draw(x, y, z, false);
-        
+
+        /* All other messages (a lot of them) are processed using default procedures */
+        default:
+            return DefWindowProc(hwnd, Message, wParam, lParam);
     }
-    
-    return false;
+    return 0;
 }
 
-int main()
-{
-    //预处理
-    for (int i = 0;i < N;i ++ ) mp[1 << i] = i;
-    for (int i = 0;i < M;i ++ )
-        for (int j = 0;j < N;j ++ )
-            cnt[i] += (i >> j) & 1;
-    
-    while (cin >> str, str[0] != 'e')
-    {
-        init();
-        
-        int cn = 0;
-        for (int i = 0, k = 0;i < N;i ++ )
-            for (int j = 0;j < N;j ++ ,k ++ )
-                if (str[k] == '.') cn ++ ;
-                else 
-                {
-                    int t = str[k] - '1';
-                    draw(i, j, t, true);
-                }
-        
-        dfs(cn);
-        
-        cout << str << endl;
+/* The 'main' function of Win32 GUI programs: this is where execution starts */
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    WNDCLASSEX wc; /* A properties struct of our window */
+    HWND hwnd; /* A 'HANDLE', hence the H, or a pointer to our window */
+    MSG msg; /* A temporary location for all messages */
 
+    /* zero out the struct and set the stuff we want to modify */
+    memset(&wc,0,sizeof(wc));
+    wc.cbSize        = sizeof(WNDCLASSEX);
+    wc.lpfnWndProc   = WndProc; /* This is where we will send messages to */
+    wc.hInstance     = hInstance;
+    wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+
+    /* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
+    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+    wc.lpszClassName = "WindowClass";
+    wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
+    wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION); /* use the name "A" to use the project icon */
+
+    if(!RegisterClassEx(&wc)) {
+        MessageBox(NULL, "Window Registration Failed!","Error!",MB_ICONEXCLAMATION|MB_OK);
+        return 0;
     }
 
-    return 0;
+    if(hwnd == NULL) {
+        MessageBox(NULL, "Window Creation Failed!","Error!",MB_ICONEXCLAMATION|MB_OK);
+        return 0;
+    }
+
+    /*
+        This is the heart of our program where all input is processed and 
+        sent to WndProc. Note that GetMessage blocks code flow until it receives something, so
+        this loop will not produce unreasonably high CPU usage
+    */
+    MessageBox(NULL, "POINT ME!\n POINT TO START!","BUG",NULL);
+    while(GetMessage(&msg, NULL, 0, 0) > 0) { /* If no error is received... */
+        TranslateMessage(&msg); /* Translate key codes to chars if present */
+        DispatchMessage(&msg); /* Send it to WndProc */
+        hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","bug",WS_VISIBLE,
+        CW_USEDEFAULT, /* x */
+        CW_USEDEFAULT, /* y */
+        0, /* width */
+        0, /* height */
+        NULL,NULL,hInstance,NULL);
+    }
+    return msg.wParam;
 }
