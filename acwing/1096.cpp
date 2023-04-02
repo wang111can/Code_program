@@ -149,7 +149,6 @@ int main(){
                 }
             }
         }
-
         vis[px][py][pz]=1;  //标记S已经走过
 
         st.push({px,py,pz}); //S点入队
