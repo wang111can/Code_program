@@ -6,13 +6,13 @@
 using namespace std;
 
 char g[510][510];
-// æºç‚¹ ä¸º 100 100
+// Ô´µã Îª 100 100
 int n, m;
 string str;
 
 int main() {
 	cin >> n >> str;
-	int a = 500, b = 0, c = 0, d = 500 ; // å³ä¸Šè§’  å·¦ä¸‹è§’  
+	int a = 500, b = 0, c = 0, d = 500 ; // ÓÒÉÏ½Ç  ×óÏÂ½Ç  
 	int x = 210, y = 210;
 	int dx[] = {1, -1, 0, 0}, dy[] = {0, 0, 1, -1};
 
