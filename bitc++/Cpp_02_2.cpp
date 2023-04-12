@@ -38,7 +38,7 @@ extern "C" {
 extern "C" {
 #endif
 
-#ifedf __cplusplus
+#ifdef __cplusplus
 }
 #endif
 */
