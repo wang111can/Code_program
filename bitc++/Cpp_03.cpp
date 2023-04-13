@@ -1,4 +1,4 @@
-#include "stl.h"
+#include "stl.hpp"
 #define ADD(x, y) ((x) + (y))
 
 /*
@@ -22,26 +22,43 @@ inline void func_1() {
 */
 
 struct s1 {
-    void init() {
-        std::cout << "init" << std::endl;
-    }
-private :
-    int a;
+        void init() {
+            std::cout << "init" << std::endl;
+        }
+    private :
+        int a;
 
     /*......*/
 };
 
-class c1 {
+int _x; // 定义
 
+class c1 {
+    //定义 对象 时才会 为 成员 开辟 空间 
+    private:
+        // 声明 
+        int _x;
+        int _y;
+
+    public:
+        // 声明
+        void Print_c1();
 };
+// 指定 Print_c1是 属于 c1 这个 类域
+void c1::Print_c1() {
+    printf("--c1--");
+}
+
 
 int main() {
-    std::cout << ADD(1, 1 + 1) << std::endl;
+    // std::cout << ADD(1, 1 + 1) << std::endl;
 
-    int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-    for (auto i : a) std::cout << i << std::endl;
+    // int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    // for (auto i : a) std::cout << i << std::endl;
+    c1 x1;
+    std::cout << sizeof (c1) << ' ' << sizeof (x1) << std::endl;
+    // std::cout << stl::Creator_name << std::endl;
 
-    std::cout << stl::Creator_name << std::endl;
 
     return 0;
 }   
