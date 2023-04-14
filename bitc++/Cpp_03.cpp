@@ -1,4 +1,4 @@
-#include "stl.hpp"
+#include "../STL/librery.hpp"
 #define ADD(x, y) ((x) + (y))
 
 /*
@@ -42,6 +42,7 @@ class c1 {
 
     public:
         // 声明
+        // 每个 对象 的 函数 是同一个， 变量 都是 独立 空间
         void Print_c1();
 };
 // 指定 Print_c1是 属于 c1 这个 类域
@@ -56,7 +57,7 @@ int main() {
     // int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     // for (auto i : a) std::cout << i << std::endl;
     c1 x1;
-    std::cout << sizeof (c1) << ' ' << sizeof (x1) << std::endl;
+    std::cout << sizeof (c1) << ' ' << sizeof (x1) << std::endl; // 只算 变量 的 空间， 函数 存放再 指定 的 函数空间 (类成员函数表_公共代码区)
     // std::cout << stl::Creator_name << std::endl;
 
 
