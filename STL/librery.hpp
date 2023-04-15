@@ -25,19 +25,13 @@ namespace stl {
         date(const date& d): _year(d._year),  _month(d._month), _day(d._day) { }
         
 
-        void operator=(const date& d) {
-            this->_year = d._year;
-            this->_day = d._day;
-            this->_month = d._month;
-
-        }
-
+        void operator=(const date& d);
         date operator+(int increasement);
         date& operator+=(int increasement);
         date operator-(int decrease);
         int operator-(const date& d);
-
         date& operator-=(int decrease);
+
         void show();
         
         bool operator<(const date& d);
@@ -45,6 +39,7 @@ namespace stl {
         bool operator==(const date& d);
         bool operator>(const date& d);
         bool operator>=(const date& d);
+        
         ~date() {}
     };
 // class date end
