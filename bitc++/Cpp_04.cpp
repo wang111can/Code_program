@@ -56,5 +56,8 @@ int main() {
 
     stl::date a = {2023, 4, 15};
     stl::date b = {1, 2, 1};
-    a.print();
+    a += 1986;
+    a.show();
+    a -= 1986;
+    a.show();
 }
