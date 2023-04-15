@@ -68,7 +68,27 @@ stl::date stl::date::operator-(int decrease) {
     }
     return tmp;
 }
+stl::date& stl::date::operator--() {
+    *this -= 1;
+    return *this;
+} 
+stl::date stl::date::operator--(int) {
+    date res (*this);
+    *this -= 1;
+    return res;
+} 
 
+
+stl::date& stl::date::operator++() {
+    *this += 1;
+    return *this;
+}
+
+stl::date stl::date::operator++(int) {
+    date res(*this);
+    *this += 1;
+    return res;
+}
 int stl::date::operator-(const date& d) {
     date tmp = *this;
     if (d._year > this->_year) return 0;

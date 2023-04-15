@@ -31,7 +31,10 @@ namespace stl {
         date operator-(int decrease);
         int operator-(const date& d);
         date& operator-=(int decrease);
-
+        date& operator++(); // 前置 ++ 
+        date operator++(int); // 后置 ++ 
+        date& operator--(); // 前置 -- 
+        date operator--(int); // 后置 -- 
         void show();
         
         bool operator<(const date& d);
