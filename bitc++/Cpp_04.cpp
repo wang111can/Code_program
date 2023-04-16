@@ -54,10 +54,9 @@ public :
 
 int main() {
 
-    stl::date a = {2023, 4, 15};
-    stl::date b = {1, 2, 1};
-    a += 1986;
-    a.show();
-    a -= 1986;
-    a.show();
+    stl::date a = {2023, 13, 15};
+    // a.show();
+    stl::date b = {2114, 10, 24};
+    std::cout << b - a << std::endl;
+
 }

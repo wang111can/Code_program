@@ -91,16 +91,14 @@ stl::date stl::date::operator++(int) {
 }
 int stl::date::operator-(const date& d) {
     date tmp = *this;
-    if (d._year > this->_year) return 0;
-    else if (d._year == this->_year) {
-        if (d._month > this->_month) return 0;
-        if (d._month == this->_month) {
-            if (d._day > this->_day) return 0;
-        }
+    date target = d;
+    if (*this < d) {
+        tmp = d, target = *this;
     }
+    
     int res = 0;
     int nt = 31;
-    while (tmp._year != d._year || tmp._day != d._day || tmp._month != d._month) {
+    while (tmp > target) {
         if (tmp._year % 4 == 0 && tmp._year % 100 != 0 || tmp._year % 400 == 0) {
             if (tmp._month - 1 == 2) {
                 nt = 29;
@@ -135,9 +133,11 @@ void stl::date::show() {
 
 bool stl::date::operator<(const date& d) {
     if (this->_year < d._year) return true;
+    else return false;
     if (this->_month < d._month) return true;
+    else return false;
     if (this->_day < d._day) return true;
-
+    else return false;
     return false;
 }
 bool stl::date::operator<=(const date& d) {
@@ -156,6 +156,8 @@ bool stl::date::operator>=(const date& d) {
     if (*this == d || !(*this < d)) return true;
     return false;
 }
-
-
 // end
+
+
+
+

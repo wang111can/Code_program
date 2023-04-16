@@ -17,11 +17,30 @@ namespace stl {
     class date {
 
     private:
-        size_t _year, _month, _day;
+        int _year, _month, _day;
 
     public: 
         
-        date(size_t year = 1, size_t month = 1, size_t day = 1): _year(year), _month(month), _day(day) {}
+        date(int year = 1, int month = 1, int day = 1) {
+            day = std::max(1, day);
+ 
+            year = std::max(1, year);
+            month = std::max(1, month);
+            if (month == 2) {       
+                if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0 ) {
+                    day = std::min(29, day);
+                }
+                else day = std::min(28, day);
+            }
+            else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) day = std::min(31, day);
+            else day = std::min(30, day);
+            month = std::min(12, month);
+            _year = year;
+            _day  = day;
+            _month = month;
+        }
+
+
         date(const date& d): _year(d._year),  _month(d._month), _day(d._day) { }
         
 
