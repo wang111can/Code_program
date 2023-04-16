@@ -1,4 +1,6 @@
+// please contact me by email(cc4096vwc@gmail) if there are any bugs or flaws 
 #include "librery.hpp" 
+
 
 
 // class date
@@ -12,40 +14,50 @@ void stl::date::operator=(const date& d) {
 }
 
 stl::date stl::date::operator+(int increasement) {
-            if (increasement > 100000000) return *this;
-            date tmp(*this);
-            int mod = 31;
-            while (increasement -- )
-            {
-                
-                if (_year % 4 == 0 && _year % 100 != 0 || _year % 400 == 0) {
-                    if (_month == 2) {
-                        mod = 29;
-                    }
-                    else if (_month == 1 || _month == 3 || _month == 5 || _month == 7 || _month == 8 || _month == 10 || _month == 12) mod = 31;
-                    else mod = 30;
-                }
-                else {
-                    if (_month == 2) mod = 28;
-                    else if (_month == 1 || _month == 3 || _month == 5 || _month == 7 || _month == 8 || _month == 10 || _month == 12) mod = 31;
-                    else mod = 30;
-                }
-                _day ++ ;
-                if (_day > mod) _month ++, _day = 1 ;
-                if (_month > 12) _year ++ , _month = 1;
+    if (increasement < 0) {
+        return *this - abs(increasement);
+    }
+    if (increasement > 100000000) return *this;
+    date tmp(*this);
+    int mod = 31;
+    while (increasement -- )
+    {
+        
+        if (_year % 4 == 0 && _year % 100 != 0 || _year % 400 == 0) {
+            if (_month == 2) {
+                mod = 29;
             }
-            date res(*this);
-            *this = tmp;
-            return res;
-        } 
+            else if (_month == 1 || _month == 3 || _month == 5 || _month == 7 || _month == 8 || _month == 10 || _month == 12) mod = 31;
+            else mod = 30;
+        }
+        else {
+            if (_month == 2) mod = 28;
+            else if (_month == 1 || _month == 3 || _month == 5 || _month == 7 || _month == 8 || _month == 10 || _month == 12) mod = 31;
+            else mod = 30;
+        }
+        _day ++ ;
+        if (_day > mod) _month ++, _day = 1 ;
+        if (_month > 12) _year ++ , _month = 1;
+    }
+    date res(*this);
+    *this = tmp;
+    return res;
+} 
 
  stl::date& stl::date::operator+=(const int increasement) {
+
     if (increasement > 100000000) return *this;
-    *this = *this + increasement;
+    if (increasement < 0) 
+        *this =  *this - abs(increasement);
+    else 
+        *this = *this + increasement;
     return *this;
 }
 
 stl::date stl::date::operator-(int decrease) {
+    if (decrease < 0) {
+        return *this + abs(decrease);
+    }
     if (*this - date(1600, 1, 1) < decrease) return *this;
     date tmp = *this;
     int nt = 31;
@@ -122,7 +134,10 @@ int stl::date::operator-(const date& d) {
 
 stl::date& stl::date::operator-=(int decrease) {
     if (*this - date(1600, 1, 1) < decrease) return *this;
-    *this = *this - decrease;
+    if (decrease < 0) {
+        *this = *this + abs(decrease);
+    }
+    else *this = *this - decrease;
     return *this;
 }
 
