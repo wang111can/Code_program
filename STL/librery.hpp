@@ -20,7 +20,7 @@ namespace stl {
         int _year, _month, _day;
 
     public: 
-        
+        friend std::ostream& operator<<(std::ostream& os, const date& d);
         date(int year = 1, int month = 1, int day = 1) {
             day = std::max(1, day);
  
@@ -44,7 +44,7 @@ namespace stl {
         date(const date& d): _year(d._year),  _month(d._month), _day(d._day) { }
         
 
-        void operator=(const date& d);
+        void    operator=(const date& d);
         date operator+(int increasement);
         date& operator+=(int increasement);
         date operator-(int decrease);
@@ -55,6 +55,8 @@ namespace stl {
         date& operator--(); // 前置 -- 
         date operator--(int); // 后置 -- 
         void show();
+
+
         
         bool operator<(const date& d);
         bool operator<=(const date& d);

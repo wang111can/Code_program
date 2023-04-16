@@ -57,6 +57,10 @@ int main() {
     stl::date a = {2023, 13, 15};
     // a.show();
     stl::date b = {2114, 10, 24};
-    std::cout << b - a << std::endl;
+    std::cout << ++ a << std::endl;
+    std::cout << -- a << std::endl;
+    std::cout << a ++ << std::endl;
+    std::cout << a -- << std::endl;
+    
 
 }

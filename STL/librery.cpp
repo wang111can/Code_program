@@ -171,6 +171,12 @@ bool stl::date::operator>=(const date& d) {
     if (*this == d || !(*this < d)) return true;
     return false;
 }
+
+std::ostream& stl::operator<<(std::ostream &os, const stl::date& d) {
+    os << d._year << '-' << d._month << '-' << d._day;
+    return os;
+}
+
 // end
 
 
