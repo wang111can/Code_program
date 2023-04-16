@@ -44,7 +44,7 @@ namespace stl {
         date(const date& d): _year(d._year),  _month(d._month), _day(d._day) { }
         
 
-        void    operator=(const date& d);
+        date operator=(const date& d);
         date operator+(int increasement);
         date& operator+=(int increasement);
         date operator-(int decrease);

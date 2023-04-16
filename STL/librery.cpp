@@ -6,7 +6,7 @@
 // class date
 // begin 
 
-void stl::date::operator=(const date& d) {
+stl::date stl::date::operator=(const date& d) {
     this->_year = d._year;
     this->_day = d._day;
     this->_month = d._month;
