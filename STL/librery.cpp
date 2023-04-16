@@ -146,7 +146,7 @@ void stl::date::show() {
 }
 
 
-bool stl::date::operator<(const date& d) {
+bool stl::date::operator<(const date& d)const {
     if (this->_year < d._year) return true;
     else return false;
     if (this->_month < d._month) return true;
@@ -155,19 +155,19 @@ bool stl::date::operator<(const date& d) {
     else return false;
     return false;
 }
-bool stl::date::operator<=(const date& d) {
+bool stl::date::operator<=(const date& d) const{
     if (*this < d || *this == d) return true;
     return false;
 } 
-bool stl::date::operator==(const date& d) {
+bool stl::date::operator==(const date& d) const{
     if (this->_year == d._year && this->_month == d._month && this->_day == d._day) return true;
     return false;
 }
-bool stl::date::operator>(const date& d) {
+bool stl::date::operator>(const date& d) const{
     if (!(*this == d) && !(*this < d)) return true;
     return false;   
 }
-bool stl::date::operator>=(const date& d) {
+bool stl::date::operator>=(const date& d)const {
     if (*this == d || !(*this < d)) return true;
     return false;
 }

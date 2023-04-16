@@ -54,15 +54,23 @@ namespace stl {
         date operator++(int); // 后置 ++ 
         date& operator--(); // 前置 -- 
         date operator--(int); // 后置 -- 
+
+        date* operator&() {
+            return this;
+        }
+        const date* operator&() const{
+            return this;
+        }
+
         void show();
 
 
         
-        bool operator<(const date& d);
-        bool operator<=(const date& d);
-        bool operator==(const date& d);
-        bool operator>(const date& d);
-        bool operator>=(const date& d);
+        bool operator<(const date& d) const;
+        bool operator<=(const date& d) const;
+        bool operator==(const date& d) const;
+        bool operator>(const date& d) const;
+        bool operator>=(const date& d) const;
         
         ~date() {}
     };
