@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // please contact me by email(cc4096vwc@gmail) if there are any bugs or flaws 
+=======
+// Please contact me(cc4069vwc@gmail.com) if there are any bugs
+>>>>>>> 3224defb3dd5366be597f7739a7a1c5634fcc6d1
 #include "librery.hpp" 
 
 
