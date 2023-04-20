@@ -34,3 +34,59 @@
 > * change 最后修改时间(包括修改文件属性) <br>
 
 
+### cp 
+> cp [filename] [target path] <br>
+
+### more
+> 显示文件内容 充满整个屏幕 <br>
+
+### less
+> less [file name] 显示文件内容<br>
+
+### head
+> head \[-要求显示的行数\] \[filename\] 从头开始显示 <br>
+
+### tail 
+>tail \[-要求显示的行数\] \[filename\] 从尾开始显示 <br>
+
+### date +%s 
+> 时间戳 <br>
+
+## find 
+> find \[路径\] -name \[文件名\] 搜索相关文件所在目录 <br>
+
+### which 
+> 在系统路径中 查找特定的指令所在的 路径
+
+### grep
+> grep "string" filename 查找并输出 指定 file 里包含 string 的 文本信息 <br>
+> -n 显示行号 <br>
+> -v 不显示 包含 "string" 的行 <br>
+> -i 忽略大小写 <br>
+
+
+### xargs
+> 将字符串 转换为 命令行 参数 <br>
+> xargs instruction <br>
+
+### ctrl + c
+> 终止前端进程 <br>
+
+### uname 
+> 查看 linux 系统信息 <br>
+>  -a 查看所有 <br> 
+> -r 查看内核 <br>
+
+
+# 打包 和 压缩
+> zip / unzip <br>
+> zip -r \[final_name\] \[targetname\] <br>
+> uzip \[filename\] <br>
+> -d \[指定路径\] <br>
+> <br>
+> tar (看文档吧 懒得写了) 
+
+
+
+
+
