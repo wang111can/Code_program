@@ -16,6 +16,7 @@
 >> * p 管道文件 <br>
 >> * b 块设备 <br>
 >> * c 字符设备 <br>
+
 > r read <br>
 > w write <br>
 > x 
