@@ -31,11 +31,18 @@
 
 ### chown
 > 改变拥有者 <br>
-> chown [user_name] [file_name] <br>
+> chown \[user_name\] \[file_name\] <br>
 
 ### chgrp
 > 改变所属组 <br>
-> chgrp [group_name] [file_name] <br>
+> chgrp \[group_name\] \[file_name\] <br>
+
+
+
+## 粘滞位
+>  多个 用户 在 一个 高级 目录 下进行操作 使每个用户的 权限独立 <br>
+> chmod +t \[file_name\] <br>
+> 只能 对 目录使用
 
 
 
