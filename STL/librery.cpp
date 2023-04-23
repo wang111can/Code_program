@@ -141,10 +141,6 @@ stl::date& stl::date::operator-=(int decrease) {
     return *this;
 }
 
-void stl::date::show() {
-    printf("%d-%d-%d\n", _year, _month, _day);
-}
-
 
 bool stl::date::operator<(const date& d)const {
     if (this->_year < d._year) return true;
@@ -182,3 +178,67 @@ std::ostream& stl::operator<<(std::ostream &os, const stl::date& d) {
 
 
 
+// class string
+
+
+stl::string stl::string::operator=(const string& str) {
+
+}
+stl::string stl::string::operator=(const char * str) {
+
+}
+
+stl::string stl::string::operator+(const string& str) {
+
+}
+stl::string stl::string::operator+(const char* str) {
+
+}
+
+stl::string& stl::string::operator+=(const string& str) {
+
+}
+stl::string& stl::string::operator+=(const char *str) {
+
+}
+
+char& back();
+void pop();
+
+
+
+// std::ostream& operator<<(std::ostream& os, const stl::string &str) {
+ 
+//     os << str._str;
+//     return os;
+
+// }
+std::istream& operator>>(std::istream& is, stl::string &str) {
+    char *s = new char[10000000];
+    int sz = 10000000, cnt = 0;
+    char ch; 
+    while (is >> ch) {
+        s[cnt ++ ] = ch;
+        if (cnt == sz) {
+            char *ss = new char[sz * 2];
+            sz *= 2;
+            for (int i = 0;i < cnt;i ++ ) ss[i] = s[i];
+            delete[] s;
+            s = ss;
+        } 
+    }
+    stl::string t(s);
+    str = s;
+    return is;
+}
+
+
+const char& stl::string::operator[](const int _index)const {
+     return _str[_index];
+}
+char& stl::string::operator[](const int _index) {
+    return _str[_index];
+}
+
+
+// end
