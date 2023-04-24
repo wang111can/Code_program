@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
+#include <algorithm>
 #include <cstring>
 #include <string>
-#include <queue>
+#include <cstdio>
 
 namespace stl {
 
@@ -12,6 +13,111 @@ namespace stl {
             
     };
 
+// class string
+    class string {
+    private:
+        static const int npos = -1;
+        char *_str;
+        size_t _size;
+    public:
+
+        // friend std::ostream& operator<<(std::ostream& os, const string &str);
+        friend std::istream& operator>>(std::istream& is, stl::string &str);
+        // string("xxxxxx")
+        string(const char * str = "") {
+            int len = std::strlen(str);
+            _str = new char(len + 1);
+            for (int i = 0;i < len;i ++ ) {
+                _str[i] = str[i];
+            }
+            _str[len] = '\0';
+            _size = len;
+        }
+
+        //string('x')
+        string(const char ch) {
+            _str = new char[1];
+            _str[0] = ch;
+            _str[1] = '\0';
+            _size = 1;
+        }
+
+        //string(10, 'x');
+        string(const int x,  const char &ch) {
+            _str = new char(x + 1);
+            _size = x;
+            for (int i = 0;i < x;i ++ ) _str[i] = ch;
+            _str[x] = '\0'; 
+        }
+
+        //string(str, 1, 5);
+        string(const string &str, int begin = 0, int len = npos) {
+            
+            if (begin >= str._size) {
+                this->_str = new char(1);
+                _str[0] = '\0';
+                this->_size = 0;
+            }
+            else {                
+                int end = 0 ;
+                if (len == -1) {
+                    end = str._size;
+                }
+                else end = std::min(begin + len, (int)str._size);
+
+                this->_size = len; 
+                this->_str = new char(this->_size + 1);
+                for (int i = begin;i < end;i ++ ) this->_str[i] = str._str[i];
+                this->_str[_size] = '\0';
+            }
+
+            
+        }
+
+        void show() {
+            std::cout << *(this->_str) << std::endl;
+        }
+
+        const int& size()const {
+            return this->_size;
+        }
+        // string.substr(1, 3)
+        string substr(const int begin,const int len);
+
+        string operator=(const string& str);
+        string operator=(const char * str);
+        string operator=(const char ch);
+
+        string operator+(const string& str);
+        string operator+(const char* str);
+        string operator+(const char ch);
+
+        string& operator+=(const string& str);
+        string& operator+=(const char *str);
+        string& operator+=(const char ch);
+
+        char& back();
+        char& front();
+        void pop_back();
+        void push_back(const char ch);
+        void append(const char *str);
+        void append(const char ch);
+        int find(const char ch);
+
+        const char& operator[](const int _index) const;
+        char& operator[](const int _index);
+
+
+
+        ~string() {
+            delete[] _str;
+        }
+        
+
+    };
+
+
+// end  
 
 // class date 
     class date {
@@ -76,3 +182,4 @@ namespace stl {
     };
 // class date end
 } 
+
