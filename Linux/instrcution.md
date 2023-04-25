@@ -31,7 +31,7 @@
 ### stat filename
 > * access 最后访问时间 <br>
 > * modify 最后修改时间(不包括修改文件属性) <br>
-> * change 最后修改时间(包括修改文件属性) <br>
+> * change 最后修改时间(修改文件属性) <br>
 
 
 ### cp 
