@@ -10,7 +10,9 @@ void test(char *x) {
 
 
 int main() {
-    stl::string a = "1111";
+    stl::string a("11111", 100);
+    stl::string b(a, 1, 1000);
     a.show();
+    b.show();
 }
 

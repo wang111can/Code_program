@@ -218,11 +218,13 @@ std::istream& operator>>(std::istream& is, stl::string &str) {
 
 
 const char& stl::string::operator[](const size_t _index)const {
+    assert(_index >= 0 && _index < _size);
      return _str[_index];
 }
 char& stl::string::operator[](const size_t _index) {
+    assert(_index >= 0 && _index < _size);
     return _str[_index];
 }
-
+const size_t stl::string::npos = 2147483647;
 
 // end

@@ -5,6 +5,12 @@
 #include <string>
 #include <cstdio>
 #include <assert.h>
+#include <climits>
+
+
+#ifndef LIBRERY_HPP
+#define LIBRERY_HPP
+
 
 namespace stl {
 
@@ -17,7 +23,7 @@ namespace stl {
 // class string
     class string {
     private:
-        static const size_t npos = INT_MAX;
+        static const size_t npos;
         char *_str;
         size_t _size;
         size_t _capacity;
@@ -25,7 +31,13 @@ namespace stl {
 
         // friend std::ostream& operator<<(std::ostream& os, const string &str);
         friend std::istream& operator>>(std::istream& is, stl::string &str);
-
+        typedef char* iterator;
+        iterator begin() {
+            return _str;
+        }
+        iterator end() {
+            return _str + _size;
+        }
 
         string() {
             _str = new char[1];
@@ -35,7 +47,7 @@ namespace stl {
 
         }
         string(const string& str, size_t begin = 0, size_t len = npos) {
-            
+                        printf("str\n");
             size_t l = begin, r = len;
             if (len == npos) {
                 r = str.size();
@@ -46,23 +58,22 @@ namespace stl {
             _str = new char[r - l + 1];
             _size = r - l;
             _capacity = r - l + 1;
-            for (size_t i = l;i < r;i ++ ) {
-                _str[i] = str[i];
+            for (size_t i = l, j = 0;i < r;j ++ , i ++ ) {
+                _str[j] = str[i];
             }
             _str[_size] = '\0';
         }
 
         string(const char* str, size_t len = npos) {
             int sz = 0;
-
+            printf("char*\n");
             if (len == npos) sz = strlen(str);
             else sz = std::min(strlen(str), npos);
             _str = new char[sz + 1];
-            
+
             for (size_t i = 0;i < sz;i ++ ) {
                 _str[i] = str[i];
             }
-            
             _str[sz] = '\0'; 
             _size = sz;
             _capacity = sz + 1;
@@ -75,7 +86,7 @@ namespace stl {
 
 
         void show() {
-            std::cout << *(this->_str) << std::endl;
+            std::cout << (this->_str) << std::endl;
         }
 
         const size_t& size()const {
@@ -191,3 +202,5 @@ namespace stl {
 // class date end
 } 
 
+
+#endif
