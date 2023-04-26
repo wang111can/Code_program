@@ -4,6 +4,7 @@
 #include <cstring>
 #include <string>
 #include <cstdio>
+#include <assert.h>
 
 namespace stl {
 
@@ -16,71 +17,78 @@ namespace stl {
 // class string
     class string {
     private:
-        static const int npos = -1;
+        static const size_t npos = INT_MAX;
         char *_str;
         size_t _size;
+        size_t _capacity;
     public:
 
         // friend std::ostream& operator<<(std::ostream& os, const string &str);
         friend std::istream& operator>>(std::istream& is, stl::string &str);
-        // string("xxxxxx")
-        string(const char * str = "") {
-            int len = std::strlen(str);
-            _str = new char(len + 1);
-            for (int i = 0;i < len;i ++ ) {
+
+
+        string() {
+            _str = new char[1];
+            _size = 0;
+            _str[0] = '\0';
+            _capacity = 1;
+
+        }
+        string(const string& str, size_t begin = 0, size_t len = npos) {
+            
+            size_t l = begin, r = len;
+            if (len == npos) {
+                r = str.size();
+            }
+            else r = std::min(str.size(), r);
+
+            assert(l <= r);
+            _str = new char[r - l + 1];
+            _size = r - l;
+            _capacity = r - l + 1;
+            for (size_t i = l;i < r;i ++ ) {
                 _str[i] = str[i];
             }
-            _str[len] = '\0';
-            _size = len;
+            _str[_size] = '\0';
         }
 
-        //string('x')
-        string(const char ch) {
-            _str = new char[1];
-            _str[0] = ch;
-            _str[1] = '\0';
-            _size = 1;
-        }
+        string(const char* str, size_t len = npos) {
+            int sz = 0;
 
-        //string(10, 'x');
-        string(const int x,  const char &ch) {
-            _str = new char(x + 1);
-            _size = x;
-            for (int i = 0;i < x;i ++ ) _str[i] = ch;
-            _str[x] = '\0'; 
-        }
-
-        //string(str, 1, 5);
-        string(const string &str, int begin = 0, int len = npos) {
+            if (len == npos) sz = strlen(str);
+            else sz = std::min(strlen(str), npos);
+            _str = new char[sz + 1];
             
-            if (begin >= str._size) {
-                this->_str = new char(1);
-                _str[0] = '\0';
-                this->_size = 0;
+            for (size_t i = 0;i < sz;i ++ ) {
+                _str[i] = str[i];
             }
-            else {                
-                int end = 0 ;
-                if (len == -1) {
-                    end = str._size;
-                }
-                else end = std::min(begin + len, (int)str._size);
-
-                this->_size = len; 
-                this->_str = new char(this->_size + 1);
-                for (int i = begin;i < end;i ++ ) this->_str[i] = str._str[i];
-                this->_str[_size] = '\0';
-            }
-
             
+            _str[sz] = '\0'; 
+            _size = sz;
+            _capacity = sz + 1;
+        
         }
+
+        // string(size_t n, char ch) {
+
+        // }
+
 
         void show() {
             std::cout << *(this->_str) << std::endl;
         }
 
-        const int& size()const {
+        const size_t& size()const {
             return this->_size;
         }
+
+        string& insert(size_t pos, const string &str);
+        string& insert(size_t pos, const string &str, size_t begin, int len = npos);
+        string& insert(size_t pos, const char* str);
+        string& insert(size_t pos, const char* str, int len = npos);
+        
+        
+
         // string.substr(1, 3)
         string substr(const int begin,const int len);
 
@@ -104,8 +112,8 @@ namespace stl {
         void append(const char ch);
         int find(const char ch);
 
-        const char& operator[](const int _index) const;
-        char& operator[](const int _index);
+        const char& operator[](const size_t _index) const;
+        char& operator[](const size_t _index);
 
 
 

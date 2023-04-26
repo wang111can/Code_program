@@ -214,29 +214,13 @@ void pop();
 
 // }
 std::istream& operator>>(std::istream& is, stl::string &str) {
-    char *s = new char[10000000];
-    int sz = 10000000, cnt = 0;
-    char ch; 
-    while (is >> ch) {
-        s[cnt ++ ] = ch;
-        if (cnt == sz) {
-            char *ss = new char[sz * 2];
-            sz *= 2;
-            for (int i = 0;i < cnt;i ++ ) ss[i] = s[i];
-            delete[] s;
-            s = ss;
-        } 
-    }
-    stl::string t(s);
-    str = s;
-    return is;
 }
 
 
-const char& stl::string::operator[](const int _index)const {
+const char& stl::string::operator[](const size_t _index)const {
      return _str[_index];
 }
-char& stl::string::operator[](const int _index) {
+char& stl::string::operator[](const size_t _index) {
     return _str[_index];
 }
 

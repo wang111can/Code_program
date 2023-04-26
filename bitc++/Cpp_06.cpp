@@ -10,7 +10,7 @@ void test(char *x) {
 
 
 int main() {
-    std::string a = "1111";
-    std::cout << a.capacity();
+    stl::string a = "1111";
+    a.show();
 }
 
