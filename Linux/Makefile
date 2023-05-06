@@ -1,5 +1,5 @@
-Mytest:pro.cpp
-	g++ -o Mytest pro.cpp
+Mytest:test.cpp
+	g++ -o Mytest test.cpp
 	
 .PHONY:clean
 clean:
