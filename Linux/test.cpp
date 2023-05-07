@@ -3,23 +3,13 @@
 #include <stdlib.h>
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
+    
+    printf("%d\n", argc);
 
-    pid_t id = fork();
+    for (int i = 0;i < argc;i ++ ) {
+        printf("argv[%d]: %s\n", i, argv[i]);
+    }
 
-    if (id == 0) {
-        printf("child: %d %d\n", getpid(), id);
-        while (1) {
-            sleep(3);
-            break;
-        }
-        return 0;
-    }
-    else {
-        while (1) {
-            printf("father: %d %d\n", getpid(), id);
-        }
-    }
-     
     return 0;
 }
