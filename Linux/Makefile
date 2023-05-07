@@ -1,6 +1,5 @@
-Mytest:test.cpp
-	g++ -o Mytest test.cpp
-#g++ -o $@ $^ 
+Mytest:test.c
+	gcc -o $@ $^ 
 #$@ 表示生成文件 $^ 表示 依赖文件
 
 

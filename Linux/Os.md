@@ -118,8 +118,9 @@ argv: 传入参数 <br>
 作用:
     可以使同一个函数通过不同的参数执行不同的功能 <br>
 
+***
 
-### 进程地址空间
+# 进程地址空间
 
 ```c_cpp
 
@@ -172,6 +173,8 @@ int g_val = 100;
 
 int main(int argc, char *argv[], char *evn[]) {
 
+
+    printf("%p\n", argv); // 命令行参数区
     printf("code: %p\n", main); // 代码段区
 
     printf("uninit: %p\n", &un_g_val); // 未初始化变量区
@@ -189,14 +192,25 @@ int main(int argc, char *argv[], char *evn[]) {
     return 0;
 }
 
-
 ```
 
-1. 什么是
+虚拟内存 从上到下依次为: <br>
 
+***
 
-2. 为什么有
+内核区 <br>
 
+命令行参数 环境变量区 <br>
 
-3. 
+栈区 (从上往下增长 / 其他的都是从下往上增长) <br>
+
+共享区<br>
+
+堆区 <br>
+
+未初始化变量区 <br>
+
+初始化变量区 <br>
+
+代码区 <br>
 
