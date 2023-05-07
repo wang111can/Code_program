@@ -119,10 +119,84 @@ argv: 传入参数 <br>
     可以使同一个函数通过不同的参数执行不同的功能 <br>
 
 
-
-
 ### 进程地址空间
 
+```c_cpp
+
+#include <iostream>
+#include <unistd.h>
+#include <stdlib.h>
+using namespace std;
+
+int g_val = 100;
+
+int main(int argc, char *argv[], char *evn[]) {
+
+    pid_t id = fork();
+    if (id == 0) {
+        while (1) {
+            printf("I am child, pid: %d, ppid: %d, g_val: %d, &g_val: %p\n", getpid(), getppid(), g_val, &g_val);
+            sleep(1);
+            g_val = 1;
+        }
+    }
+    else if (id != -1) {
+        
+        while (1) {
+            printf("I am father, pid: %d, ppid: %d, g_val: %d, &g_val: %p\n", getpid(), getppid(), g_val, &g_val);
+            sleep(1);
+        }
+    }
+    
 
 
+    return 0;
+}
+
+```
+
+运行上述代码会发现 g_val的地址 是 一样的
+子进程改变了 g_val的 值 但是 父进程 的 g_val 没有变化
+可以得出 这时的 地址 不是计算机内 的 物理地址 而是虚拟地址 <br>
+
+
+
+```
+#include <iostream>
+#include <unistd.h>
+#include <stdlib.h>
+using namespace std;
+
+int un_g_val;
+int g_val = 100;
+
+int main(int argc, char *argv[], char *evn[]) {
+
+    printf("code: %p\n", main); // 代码段区
+
+    printf("uninit: %p\n", &un_g_val); // 未初始化变量区
+    
+    printf("init: %p\n", &g_val); // 初始化变量区
+
+    char *p = (char*) malloc(10);
+
+    printf("heap: %p\n", p); // 堆区
+
+    int a;
+    printf("stack: %p\n", &a); // 栈区
+
+
+    return 0;
+}
+
+
+```
+
+1. 什么是
+
+
+2. 为什么有
+
+
+3. 
 
