@@ -288,9 +288,10 @@ if (wait_id == id) {
 
 ////
                     存储子进程的退出结果
-waitpid(pit_t pid, int *status, int options);
-        等待进程pid                    等待时进程所处的状态 默认为0 为阻塞等待
-    -1为等待任意进程
+pid_t waitpid(pit_t pid, int *status, int options);
+>0 等待结束         等待进程pid/-1为等待任意进程
+0 等待成功但子进程并未退出                等待时进程所处的状态 默认为0 为阻塞等待
+<0等待失败                               WNOHANG 非阻塞等待
 
 int status = 0;
 pid_t wait_id = waitpid(id, &status, 0); // 
@@ -301,5 +302,40 @@ if (wait_id == id) {
     printf("notify: %d\n", status & 0x7f);
 }
 ```
+
+<br>
+
+阻塞等待 和 非阻塞等待 <br>
+> **阻塞等待**：在 wait 函数 内直接 记录pc 指针的位置随后阻塞 <br>
+> **非阻塞等待**：在wait 函数 内 直接return 可手动**编写代码**进行多次 间断的 查询子进程的 状态 <br> 
+
+
+### 进程程序替换
+
+> 原理:
+    > 子进程调用 exec 函数，使改进程的用户空间**代码和数据**被新程序**完全替换** <br>
+
+**int execl(const char *pathname, const char *arg, ..., NULL);** 
+> pathname 可执行文件路径 <br> 
+> *arg 命令行参数<br>
+> ... 可变参数列表 <br>
+> 最后一个参数必须是NULL 表示参数传递完毕 <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
