@@ -7,8 +7,8 @@
 
 int main(int argc, char *argv[], char *evn[]) {
 
-    execl("./process", "gcc process.c", "-o", "process", NULL);
+    
 
-    printf("fail\n");
+
     return 0;
 }

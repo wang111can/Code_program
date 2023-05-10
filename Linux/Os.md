@@ -272,6 +272,7 @@ int main(int argc, char *argv[], char *evn[]) {
 4. 进程等待
     > 父进程通过进程等待 来 获取子进程的退出信息 <br>
 
+### wait / waitpid
 **wait / waitpid 函数**
 >  wait for process to change state, 等待 子进程 运行状态的变化 <br>
 > 等待完毕返回 子进程pid，失败返回 0 <br>
@@ -310,18 +311,78 @@ if (wait_id == id) {
 > **非阻塞等待**：在wait 函数 内 直接return 可手动**编写代码**进行多次 间断的 查询子进程的 状态 <br> 
 
 
-### 进程程序替换
+# 进程程序替换函数
 
 > 原理:
     > 子进程调用 exec 函数，使改进程的用户空间**代码和数据**被新程序**完全替换** <br>
 
-**int execl(const char *pathname, const char *arg, ..., NULL);** 
+**int execl(const char *pathname, const char *arg, ..., NULL)** 
 > pathname 可执行文件路径 <br> 
 > *arg 命令行参数<br>
 > ... 可变参数列表 <br>
 > 最后一个参数必须是NULL 表示参数传递完毕 <br>
 
+<br>
 
+**int execv(const char* pathname, char *coant argv[])** 
+> 文件路径 <br>
+> argv 参数数组, 以NULL 结尾 <br>
+
+<br>
+
+
+**int execlp(const char *file, const char *arg, ..., NULL)** 
+> 在环境变量PATH 中查找 file <br>
+
+<br>
+
+**int execvp(const char* pathname, char *coant argv[])** 
+> 在环境变量PATH下 查找 file <br>
+> argv 参数数组, 以NULL 结尾 <br>
+
+**int execvpe(const char *file, char *const argv[], char *const envp[])** 
+<br><br>
+
+**int execle(const char *pathname, const char *arg, ... NULL, char *const envp[] */)**
+> char *const envp[] 环境变量 数组 <br>
+
+<br>
+
+> 函数 命名理解
+> * l(list): 参数用列表 <br>
+> * v(vector): 参数用数组 <br>
+> * p(path)： 自动搜索环境变量 PATH <br>
+> * e(env): 维护自己的环境变量 <br>
+
+<br>
+
+**如何执行其它程序**
+> 1. 生成可执行文件 <br>
+> 2. 进行代码和数据替换 <br>
+
+> 使用 exec 系列函数 执行不同的语言程序 <br>
+```c
+int main(int argc, char *argv[], char *evn[]) {
+
+    char *const arg[] = {"-a", "-l", NULL};
+    char *str[] = {
+        "python", 
+        "bash"
+    };
+    char *task[] = {
+        "test.py",
+        "test.sh"
+    };
+    for (int i = 0;i < 2;i ++ ) {
+        pid_t id = fork();
+        if (id == 0) {
+            execlp(str[i], str[i], task[i], NULL);
+        }
+        else wait(NULL);
+    }
+    return 0;
+}
+```
 
 
 

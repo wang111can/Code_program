@@ -1,8 +1,5 @@
-Mytest:test.c
-	gcc -o $@ $^ 
-#$@ 表示生成文件 $^ 表示 依赖文件
-
+Inter:Interpret_shell.c
+	gcc -o $@ $^
 
 .PHONY:clean
-clean:
-	rm -f Mytest
+	rm -r Inter

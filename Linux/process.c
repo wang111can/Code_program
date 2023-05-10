@@ -8,7 +8,11 @@
 int main(int argc, char *argv[], char *evn[]) {
 
     printf("call outer process to cover the process\n");
-    
+    for (int i = 0;evn[i];i ++ ) {
+        printf("%s\n", evn[i]);
+    }
+    sleep(3);
 
     return 0;
 }
+
