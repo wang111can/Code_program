@@ -1,12 +1,10 @@
 .PHONY: all
-all: Mytest process
+all: Mytest
 
 
-Mytest:test.c
-	gcc -o $@ $^ 
+Mytest:File_Op.cc
+	g++ -o $@ $^ 
 
-process:process.c
-	gcc -o $@ $^ 
 #$@ 表示生成文件 $^ 表示 依赖文件
 
 

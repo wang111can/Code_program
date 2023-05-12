@@ -103,9 +103,10 @@ set <br>
 int main(int argc, char *argv[], char *env[]) {
 
 // 获取环境变量
-    // extern char *environ;
+    // extern char **environ;
     // getenv("environment variable name")
 // 设置环境变量
+    // putenv("") 把环境变量 添加到当前进程
     // setenv(" ", " ")
 }
 
@@ -388,6 +389,27 @@ int main(int argc, char *argv[], char *evn[]) {
 
 
 # 基础IO
+
+## 文件描述
+文件 = 文件内容 + 文件属性 <br>
+文件的 操作: <br>
+> 1. 对内容 <br>
+> 2. 对属性 <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
