@@ -1,27 +1,7 @@
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
-hello fwrite
-hello fprintf
-hello fputs
+1
+1
+1
+1
+1
+1
+1

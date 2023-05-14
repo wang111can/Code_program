@@ -413,6 +413,52 @@ int main(int argc, char *argv[], char *evn[]) {
 
 
 
+### 系统文件操作接口
+1. open <br>
+
+
+
+**int open(const char *pathname, int flags)** <br> 
+> flags(比特表示 状态): <br>
+> * O_RDONLY：只读 <br> 
+> * O_WRONLY：只写 <br>
+> * O_RDWR：读写 <br>
+> * O_CREAT: 没有目标文件 则创建 <br>
+> * O_TRUNC: 清空文件 <br>
+> * O_APPEND: 在文件尾追加 <br>
+
+
+**int open(const char *pathname, int flags, mode_t mode)** <br>
+> mode(权限, 8 进制表示)： <br>
+> 通常用于 文件不存在 创建文件 <br>
+
+
+
+
+
+2. close
+**int close(int fp)** <br>
+
+3. write
+**ssize_t write(int fd, const void *buf, size_t count)** <br>
+
+4. read
+**ssize_t read(int fd, void *buf, size_t count)**: 按字节读取, sszie_t 为 实际读取到的数字个数 <br>
+
+
+
+### 文件描述符
+1. 0, 1, 2 <br>
+分别为 stdin stdout stderr 文件 <br>
+后续文件 数字依次增加, 本质为数组下标 <br>
+当数组 前面 有 某个下标对应的 文件被 关闭时 会采用就小原则来分配下标 <br>
+
+2. 重定向 <br>
+更改 fd 内容的 指向 <br >
+> 1. 利用 fd 分配机制 <br>
+> 2. 利用系统调用函数 <br>
+> **int dup2(int oldfd, int newfd)** <br>
+>  把 oldfd 的 内容 拷贝到 newfd 里 <br>
 
 
 
@@ -420,15 +466,11 @@ int main(int argc, char *argv[], char *evn[]) {
 
 
 
+# 缓冲区 cache
+提高系统效率 <br>
+存在于 cpu 和 硬件之间的 区域 来缓解 cpu 的处理速度和 硬件之间处理速度差 <br>
 
-
-
-
-
-
-
-
-
+![Image text](./cache.png)
 
 
 
