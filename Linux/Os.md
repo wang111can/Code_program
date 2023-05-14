@@ -394,6 +394,21 @@ int main(int argc, char *argv[], char *evn[]) {
 文件 = 文件内容 + 文件属性 <br>
 文件的 操作: <br>
 > 1. 对内容 <br>
+> * 语言接口 写入 <br>
+>   1. w(write) <br>
+>> ```cpp
+>> const char *s1 = "hello fwrite";
+>> const char *s1 = "hello fwrite\n";
+>> fwrite(s1, strlen(s1), 1, fp);
+>> const char *s2 = "hello fprintf\n";
+>> fprintf(fp, "%s", s2);
+>> const char *s3 = "hello fputs\n";
+>> fputs(s3, fp);
+>>
+>> ```
+>   2. a(append) <br>
+>   3. r (read) <br>
+>       1. fgets(buffer, len, FILE*) <br>
 > 2. 对属性 <br>
 
 
