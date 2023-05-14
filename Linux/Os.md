@@ -406,8 +406,8 @@ int main(int argc, char *argv[], char *evn[]) {
 >> fputs(s3, fp);
 >>
 >> ```
->   2. a(append) <br>
->   3. r (read) <br>
+>    2. a(append) <br>
+>    3. r (read) <br>
 >       1. fgets(buffer, len, FILE*) <br>
 > 2. 对属性 <br>
 
