@@ -395,7 +395,7 @@ int main(int argc, char *argv[], char *evn[]) {
 文件的 操作: <br>
 > 1. 对内容 <br>
 > * 语言接口 写入 <br>
->   1. w(write) <br>
+>   w(write) <br>
 >> ```cpp
 >> const char *s1 = "hello fwrite";
 >> const char *s1 = "hello fwrite\n";
@@ -406,9 +406,9 @@ int main(int argc, char *argv[], char *evn[]) {
 >> fputs(s3, fp);
 >>
 >> ```
->    2. a(append) <br>
->    3. r (read) <br>
->       1. fgets(buffer, len, FILE*) <br>
+> a(append) <br>
+> r (read) <br>
+>> fgets(buffer, len, FILE*) <br>
 > 2. 对属性 <br>
 
 
