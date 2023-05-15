@@ -13,7 +13,18 @@ int main() {
 
 
     
-    int fp = open("text.txt", O_WRONLY | O_CREAT, 0777);
+    char *a = "hello printf";
+    printf("%s\n", a);
+    char *b = "hello fprintf";
+    fprintf(stdout, "%s\n", b);
+    char *c = "hello fputs\n";
+    fputs(c, stdout);
+
+    char *d = "hello write\n";
+    write(1, d, strlen(d));
+
+    // fflush(stdout);
+    fork();
 
     // printf("FILE1: %d\n", fp); 
     // while (1) {

@@ -1,7 +1,2 @@
-1
-1
-1
-1
-1
-1
-1
+string1string2
+string3string4

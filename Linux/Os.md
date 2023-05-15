@@ -468,12 +468,33 @@ int main(int argc, char *argv[], char *evn[]) {
 
 # 缓冲区 cache
 提高系统效率 <br>
-存在于 cpu 和 硬件之间的 区域 来缓解 cpu 的处理速度和 硬件之间处理速度差 <br>
 
-![Image text](./cache.png)
-由图可以看出 系统调用接口 是 不由缓冲区处理 直接 发送到目的地， 语言级别的 输入输出是 要经过缓冲区的，但是子进程是会继承父进程的缓冲区的 所以最后写入的 有 7 条信息 <br>
+![Image text](./cache.png) <br>
+```cpp
+    
+char *a = "hello printf";
+char *b = "hello fprintf";
+char *c = "hello fputs\n";
+char *d = "hello write\n";
+
+fprintf(stdout, "%s\n", b);
+printf("%s\n", a);
+fputs(c, stdout);
+write(1, d, strlen(d));
+
+// fflush(stdout);
+fork();
+
+```
+同样的 文件 向显示器 打印 与 向文件打印的 结果不一样 <br>
+系统接口只打印一次， 语言接口打印 2 次 <br>
+原因:<br> 
+1. 当对 文件的输出进行重定向时， 隐性的改变了 缓冲区的 刷新机制 *显示器* > *磁盘* (*行缓冲* > *全缓冲*) fork()时 函数执行完 但数据没有刷新 子进程会拷贝父进程的缓冲区<br>
+2. 把数据刷新 **(清空缓冲区)** 到输出的目标文件中也是发生了写时拷贝 <br>
 
 
+**int syncfs(int fd)**  <br>
+把数据写入到磁盘 <br>
 
 
 
