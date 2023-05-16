@@ -34,7 +34,6 @@ int main(int argc, char *argv[], char *evn[]) {
 
         while (_argv[index ++ ] = strtok(NULL, " "));
         // The  strtok()  function breaks a string into a sequence of zero or more nonempty tokens
-      
         // 内置命令
         // 不想让 子进程执行，要让父进程 或shell 执行的 命令
         // 例如 cd 命令， 子进程执行只改变子进程的 工作目录 不改变父进程的 工作目录 

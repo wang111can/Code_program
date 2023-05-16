@@ -34,7 +34,12 @@ FILE_* fopen_(char *pathname, char *mode) {
 
     }
     else if (strcmp(mode, "r+") == 0) {
-        
+        int fd = open(pathname, O_RDWR | O_CREAT | O_TRUNC, 0666);
+        if (fd >= 0 ) {
+            fp = (FILE_*)malloc(sizeof (FILE_));
+            memset(fp, 0, sizeof (FILE_));
+            fp->fd = fd;
+        }
     }
 
 
@@ -48,9 +53,21 @@ FILE_* fopen_(char *pathname, char *mode) {
     }
     else if (strcmp(mode, "w+") == 0) {
         
+        int fd = open(pathname, O_RDWR | O_CREAT | O_TRUNC, 0666);
+        if (fd >= 0 ) {
+            fp = (FILE_*)malloc(sizeof (FILE_));
+            memset(fp, 0, sizeof (FILE_));
+            fp->fd = fd;
+        }
     }
     else if (strcmp(mode, "a") == 0) {
         
+        int fd = open(pathname, O_WRONLY | O_APPEND | O_CREAT , 0666);
+        if (fd >= 0 ) {
+            fp = (FILE_*)malloc(sizeof (FILE_));
+            memset(fp, 0, sizeof (FILE_));
+            fp->fd = fd;
+        }
     }
     else if (strcmp(mode, "a+") == 0) {
         
@@ -103,7 +120,7 @@ void fclose_(FILE_* fp) {
 
 int main() {
 
-    FILE_* fp = fopen_("text.txt", "w");
+    FILE_* fp = fopen_("text.txt", "a");
 
     fputs_("string1", fp);
 

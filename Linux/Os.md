@@ -261,6 +261,12 @@ int main(int argc, char *argv[], char *evn[]) {
     <br>
 
     **退出码**
+查看所有退出码 对应的 错误信息: <br>
+```cpp
+for (int i = 0;i < 200;i ++ ) {
+    printf("%s \n", strerror(i));
+}
+```
     用来标识 进程结束的原因，提供给父进程 <br>
     
 
@@ -435,7 +441,6 @@ int main(int argc, char *argv[], char *evn[]) {
 
 
 
-
 2. close
 **int close(int fp)** <br>
 
@@ -463,10 +468,25 @@ int main(int argc, char *argv[], char *evn[]) {
 
 
 
+### stdout 和 stderr 的区别
+```cpp
+printf("hello printf \n");
+fprintf(stdout, "hello fprintf \n");
+perror("hello perror ");
+
+const char *s1 = "hello write \n";
+write(1, s1, strlen(s1));
+
+std::cout << "hello cout \n";
+std::cerr << "hello cerr \n";
+```
+
+> 文件描述符> 文件  指定文件的输出 输出到指定文件 <br>
+1. 在输出重定向时 只会重定向 stdout， 因为 stdout 与 stderr 的 文件描述符是 不同的 (但 2 个文件指向的 都为显示器) <br> 
 
 
 
-# 缓冲区 cache
+## 缓冲区 cache
 提高系统效率 <br>
 
 ![Image text](./cache.png) <br>
@@ -497,7 +517,12 @@ fork();
 把数据写入到磁盘 <br>
 
 
-
+## 文件系统
+![file_system](./File_system.png) <br>
+1. 磁盘级文件(未被打开的文件) <br>
+   > 使用 Inode编号 来标识每一个文件的 **Inode空间** <br>
+   > 
+   > 
 
 
 

@@ -11,20 +11,28 @@
 
 int main() {
 
+    printf("hello printf \n");
+    fprintf(stdout, "hello fprintf \n");
+    perror("hello perror ");
 
-    
-    char *a = "hello printf";
-    printf("%s\n", a);
-    char *b = "hello fprintf";
-    fprintf(stdout, "%s\n", b);
-    char *c = "hello fputs\n";
-    fputs(c, stdout);
+    const char *s1 = "hello write \n";
+    write(1, s1, strlen(s1));
 
-    char *d = "hello write\n";
-    write(1, d, strlen(d));
+    std::cout << "hello cout \n";
+    std::cerr << "hello cerr \n";
 
-    // fflush(stdout);
-    fork();
+    // char *a = "hello printf";
+    // printf("%s\n", a);
+    // char *b = "hello fprintf";
+    // fprintf(stdout, "%s\n", b);
+    // char *c = "hello fputs\n";
+    // fputs(c, stdout);
+
+    // char *d = "hello write\n";
+    // write(1, d, strlen(d));
+
+    // // fflush(stdout);
+    // fork();
 
     // printf("FILE1: %d\n", fp); 
     // while (1) {

@@ -2,8 +2,8 @@
 all: Mytest
 
 
-Mytest:buffer.c
-	gcc -o $@ $^ 
+Mytest:File_Op.cc
+	g++ -o $@ $^ 
 
 #$@ 表示生成文件 $^ 表示 依赖文件
 
