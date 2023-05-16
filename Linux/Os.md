@@ -518,7 +518,9 @@ fork();
 
 
 ## 文件系统
+系统内的 文件区块分区 <br>
 ![file_system](./File_system.png) <br>
+
 1. 磁盘级文件(未被打开的文件) <br>
    > 使用 Inode编号 来标识每一个文件的 **Inode空间** <br>
    > 
