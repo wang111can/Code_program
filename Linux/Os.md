@@ -569,13 +569,14 @@ fork();
 > 生成静态库 文件: `ar -rc lib_user_defined_name.a ....链接文件....` <br>
 > -rc: replace and create
 
-拷贝 对应的 文件到 对应的 程序运行搜索目录下 <br>
-
-
-
+拷贝 对应的 文件到 对应的 程序运行搜索目录下: <br>
 /lib and /include <br>
-
+ 
 3. .so(动态库)
+> `gcc -shared .o文件.. -o lib_name_.so` <br> 
+> gcc 编译的 .o 文件需在 编译时 加上 -fPIC 选项 <br>
+> 动态库可以和 可执行程序分批加载 是在程序运行期间链接<br>
+> 
 
 
 
