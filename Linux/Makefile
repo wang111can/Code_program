@@ -11,4 +11,4 @@ Mytest:File_Op.cc
 
 .PHONY:clean
 clean:
-	rm -f Mytest process
+	rm -f Mytest 

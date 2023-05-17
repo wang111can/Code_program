@@ -523,8 +523,66 @@ fork();
 
 1. 磁盘级文件(未被打开的文件) <br>
    > 使用 Inode编号 来标识每一个文件的 **Inode空间** <br>
-   > 
-   > 
+
+
+
+
+
+# 软硬链接
+
+1. 软链接: ln -s \[main_file\] \[link_file\] <br>
+> 形成一个link_file 软链接到 main_file <br>
+```cpp
+678131 lrwxrwxrwx 1 wc wc      9 May 17 14:14 sortlink -> link1.txt
+669800 -rw-rw-r-- 1 wc wc     12 May 17 14:18 link1.txt
+```
+> 应用: 快捷方式 <br>
+> 软链接的 文件内容是指向文件的对应 路径 <br>
+
+<br>
+
+2. 硬链接 ln  \[main_file\] \[link_file\] <br>
+> 形成一个link_file 硬链接到 main_file <br>
+```cpp
+669836 -rw-rw-r-- 2 wc wc     12 May 17 14:17 hardlink
+669836 -rw-rw-r-- 2 wc wc     12 May 17 14:17 link2.txt
+```
+> 
+
+
+
+<br>
+
+**区别**: 是否有独立的 inode <br>
+
+<br>
+
+3. 删除链接: unlink <br>
+
+
+
+# 动静态库
+
+* 生成 链接文件： g++ -c library.cc -o library.o <br>
+
+1. .a(静态库)
+> 生成静态库 文件: `ar -rc lib_user_defined_name.a ....链接文件....` <br>
+> -rc: replace and create
+
+拷贝 对应的 文件到 对应的 程序运行搜索目录下 <br>
+
+
+
+/lib and /include <br>
+
+3. .so(动态库)
+
+
+
+
+
+
+
 
 
 
