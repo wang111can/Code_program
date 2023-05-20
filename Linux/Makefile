@@ -2,7 +2,7 @@
 all: Mytest
 
 
-Mytest:File_Op.cc
+Mytest:pipe.cc
 	g++ -o $@ $^ 
 
 #$@ 表示生成文件 $^ 表示 依赖文件

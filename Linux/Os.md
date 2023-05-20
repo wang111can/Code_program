@@ -582,7 +582,13 @@ fork();
 
 
 
-# 进程间通信
+# 进程间通信(IPC)
+
+> 因为进程的特征(独立性) 进程间想进行通信 的难度很大 <br>
+> ) <br>
+
+
+<br> <br>
 
 ### 介绍
 **进程通信的 目的**: <br>
@@ -590,9 +596,95 @@ fork();
 > * 资源共享 <br>
 > * 通知事件 <br>
 > * 进程控制 <br>
->  
+
+<br> <br>
+
+1. 必要性 <br>
+>  单进程 无法使用并发能力， 更加无法实现多**进程协同**。 <br>
+
+2. 本质理解 <br>
+>  让不同的 进程看到同一份 内存 <br>
+
+3. 进程通信的 一些标准
+   > * Linux 原生资源: 管道 <br>
+   > * SystemV：多线程单机通信 <br>
+   > * posix： 多线程网络通信 <br>
+<br> <br>
 
 ### 管道
+
+> **int pipe(int pipefd[2])** <br>
+> 函数 会修改pipefd 数组 并且返回 2 个 文件 描述符 fd 来表示创建的 管道 的 入口和出口<br>
+> pipefd[0]: 读端， pipefd[1]: 写端 <br>
+
+*** 
+
+* **Demo1**
+```cpp
+
+int main() {
+
+
+    int pipeid[2] = {0}; // 创建管道
+    int res_p = pipe(pipeid); // pipeid[0] 表示读出端 pipeid[1] 表示写入端
+    // 1 -----> 0
+    if (res_p == -1) {
+        perror("pipe");
+        exit(1);
+    }
+
+    pid_t id = fork();
+    if (id == -1) {
+        perror("fork");
+        exit(1);
+    }    
+
+    if (id == 0) {
+        // 子进程 读取
+        // 进程 关闭 自己不需要的 端
+        close(pipeid[1]);
+        while (1) {
+            char buffer[1024];
+            // 读取 管道内的 信息
+            // 从进程 自己 对应的 端进行操作
+            int size = read(pipeid[1], buffer, 1024 - 1);
+            if (size > 0) {
+                buffer[size] = 0;
+                printf("%d %s\n", size, buffer);
+                std::cout << "father's message: " << buffer << '\n';
+            }
+
+            sleep(1);
+        }   
+        close(pipeid[0]);
+    }
+    else {
+        // 父进程
+        // 进程 关闭 自己不需要的 端
+        close(pipeid[0]);
+        std::string str = "hello child process!";
+
+        int cnt = 0;
+        while (1) {
+            char buffer[1024];
+            snprintf(buffer, sizeof(buffer), "%s[%d] NO.%d", str.c_str(), getpid(), ++ cnt);         
+            // 从进程 自己 对应的 端进行操作
+            // printf("father %s\n", buffer);
+            write(pipeid[1], buffer, strlen(buffer));
+            sleep(1);
+        }
+        
+        close(pipeid[1]);
+        int wait = waitpid(id, nullptr, 0);
+    }
+
+    return 0;
+}
+```
+
+
+
+
 
 
 ### 消息队列
