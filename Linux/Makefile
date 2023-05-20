@@ -1,9 +1,14 @@
 .PHONY: all
-all: Mytest
+all: Mytest Mytest2
 
 
-Mytest:pipe.cc
+Mytest:fifo_1.cc
 	g++ -o $@ $^ 
+
+
+Mytest2:fifo_2.cc
+	g++ -o $@ $^ 
+
 
 #$@ 表示生成文件 $^ 表示 依赖文件
 
@@ -11,4 +16,4 @@ Mytest:pipe.cc
 
 .PHONY:clean
 clean:
-	rm -f Mytest 
+	rm -f Mytest Mytest2 pipe
