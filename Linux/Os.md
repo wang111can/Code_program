@@ -585,7 +585,6 @@ fork();
 # 进程间通信(IPC)
 
 > 因为进程的特征(独立性) 进程间想进行通信 的难度很大 <br>
-> ) <br>
 
 
 <br> <br>
@@ -700,14 +699,50 @@ int main() {
 > 在 命令行上创建， 可用于 没有父子类关系的 进程进行通信 <br>
 > `mkfifo  [option] [name]` <br>
 > 系统调用接口 `int mkfifo(const char* pathbname, mode_t mode)`: mode 表示 为 文件权限 <br>
-
+> `unlink(pipe_path)` 删除管道 <br>
 
 
 ### 消息队列
 
 
-### 共享内存
+### 共享内存 System V 通信
+1. 原理 
+> 操作系统 在 物理内存 内 吧 一块 内存 通过页表映射 得到 对应的 虚拟地址， 把 这块物理地址 同样的 映射到不同的 进程， 使这些进程能够通过 **虚拟内存 --> 页表 --> 物理内存** 访问 到同一块内存， 从而实现进程间通信 <br>
 
+2. 共享内存的建立
+> 隶属于 操作系统 <br>
+> 共享内存 = 共享内存块 + 共享内存的 内核数据结构 (先描述，再组织)<br>
+
+* 接口 
+```cpp
+int shmget(key_t key, size_t size, int shmflg); 返回值 为 共享内存的 标识符    
+
+key: 用于给 通信对方 来申请的共享内存 为同一块内存 
+
+
+size: 共享内存大小
+
+
+shmflg 表示：
+IPC_CREAT: 创建一个共享内存， 如果已经存在则返回 存在的 共享内存
+IPC_EXCL: 与IPC_CREAT 一起使用，  创建一个共享内存， 如果已经存在则出错返回
+
+
+```
+
+> System V IPC 资源 生命周期 随内核 <br>
+> 1. 手动删除 ipcrm -m shmid <br>
+> 2. 代码删除 `int shmctl(int __shmid, int __cmd(指令), shmid_ds *__buf(操作系统描述共享内存的结构体))` <br>
+ 
+
+> 挂接 共享内存 `void shmat(int shmid, const void *shmaddr, int shmflg)` <br> 
+> 从地址空间 内 去 关联 `void shmdt(const void *shmaddr)` <br>
+> attach：连接共享内存  <br>
+> detach: 断开连接 <br>
+
+**共享内存的特性**
+1. 共享内存是 进程通信中最快速的(不需要经过系统) <br>
+2. 共享内存缺乏 访问控制 <br>
 
 
 ### 信号量

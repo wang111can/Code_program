@@ -32,9 +32,6 @@ int main()
         sleep(1);
     }   
 
-
-
-
     close(fd);
 
     return 0;

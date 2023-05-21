@@ -2,11 +2,11 @@
 all: Mytest Mytest2
 
 
-Mytest:fifo_1.cc
+Mytest:System_v_1.cc
 	g++ -o $@ $^ 
 
 
-Mytest2:fifo_2.cc
+Mytest2:System_v_2.cc
 	g++ -o $@ $^ 
 
 
@@ -16,4 +16,4 @@ Mytest2:fifo_2.cc
 
 .PHONY:clean
 clean:
-	rm -f Mytest Mytest2 pipe
+	rm -f Mytest Mytest2 
