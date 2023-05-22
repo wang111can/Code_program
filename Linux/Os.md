@@ -733,12 +733,14 @@ IPC_EXCL: 与IPC_CREAT 一起使用，  创建一个共享内存， 如果已经
 > System V IPC 资源 生命周期 随内核 <br>
 > 1. 手动删除 ipcrm -m shmid <br>
 > 2. 代码删除 `int shmctl(int __shmid, int __cmd(指令), shmid_ds *__buf(操作系统描述共享内存的结构体))` <br>
- 
+> **IPC 资源必须删除，不会自动清除，除非重启 因为IPC 资源 生命周期 随内核**  <br>
 
 > 挂接 共享内存 `void shmat(int shmid, const void *shmaddr, int shmflg)` <br> 
 > 从地址空间 内 去 关联 `void shmdt(const void *shmaddr)` <br>
 > attach：连接共享内存  <br>
 > detach: 断开连接 <br>
+
+
 
 **共享内存的特性**
 1. 共享内存是 进程通信中最快速的(不需要经过系统) <br>
@@ -746,7 +748,8 @@ IPC_EXCL: 与IPC_CREAT 一起使用，  创建一个共享内存， 如果已经
 
 
 ### 信号量
-
+> 对 临界资源(多个进程能访问的资源)的 管理, 本质为 一个计数器 <br>
+>  P 申请信号量 V 释放信号量 <br>
 
 
 
