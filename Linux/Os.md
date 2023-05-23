@@ -656,7 +656,7 @@ int main() {
             char buffer[1024];
             // 读取 管道内的 信息
             // 从进程 自己 对应的 端进行操作
-            int size = read(pipeid[1], buffer, 1024 - 1);
+            int size = read(pipeid[0], buffer, 1024 - 1);
             if (size > 0) {
                 buffer[size] = 0;
                 printf("%d %s\n", size, buffer);
@@ -772,10 +772,82 @@ IPC_EXCL: 与IPC_CREAT 一起使用，  创建一个共享内存， 如果已经
 ### what why how
 1. 什么是信号 <br>
 > * 本质是一种**通知机制**. 用户or操作系统 通过发送一定的信号 来**通知进程 后续处理**来达到 某种目的 <br>
-> * 进程 必须 <underline>识别信号 处理信号 存储信号</underline> 的 能力 <br>
+> * 进程 必须 识别信号 处理信号 存储信号 的能力 <br> 
+> * 一般而言信号的产生相对进程来说是 **异步**的 <br>
+> * **信号处理**: <br>
+> * 1. 默认处理 (进程自带) <br>
+> * 2. 忽略 <br>
+> * 3. 自定义处理 (捕捉信号) <br>
+> * **常见信号**: <br>
+> * 1. kill -l 显示linux 内 内置的信号 <br>
+> * 信号发送的本质是 操作系统 把 信号信息写进进程的PCB 结构体内 <br>
+
+
 2. 为什么要有信号 <br>
 
 3. 如何使用
+`signal 函数` **修改**进程对后续进程的处理动作 <br>
+> sighandler_t signal(int signum, sighandler_t handler) <br>
+> signum: 信号编号数值. handler: 自定义处理方法 `void handler(signum)` <br>
+
+`int kill(pid_t pid, int sig)`通过系统调用接口 向进程发送信号 <br>
+`int raise(int sig)` 给自己发送指定的 信号 <br>
+`void abort()` 给自己 发送 6 号信号 <br>
+
+### 软件条件产生信号 
+1. 管道的 验证
+![img](/Code_program/Linux/软件条件产生信号_管道的验证.jpg) <br>
+> 当异常产生时 操作系统会终止进程 并设置错误码为 SIGPIPE(13) <br>
+**验证**:  <br>
+```cpp
+
+int main() {
+
+    pid_t id = fork();
+    int pipeid[2] = {0};
+    pipe(pipeid);
+    
+    
+    if (id == 0) {
+        close(pipeid[0]);
+        string str = "Writing!!!!!!!!!!";
+        while (1) {
+            write(pipeid[1], str.c_str(), (int)str.size());
+        }
+        close(pipeid[1]);
+        exit(0);
+    }
+    else {
+
+        close(pipeid[1]);
+        char buffer[1024];
+        for (int i = 1;i <= 5;i ++ ) {
+            sleep(1);
+            read(pipeid[0], buffer, 1024 - 1);
+        }
+        close(pipeid[0]);
+        int status = 0;
+        int wait_id = waitpid(id, &status, 0);
+        printf("子进程的退出码为[%d]\n", status & 0x7f);
+    }
+    
+    return 0;
+}
+
+```
+
+2. `int alarm(int seconds)` 设置闹钟 参数为秒数 在特定的秒数结束后 终止进程 设置退出码为 SIGNALRM(14)<br>
+
+
+### 硬件异常产生信号 
+> 当发生硬件异常 信号，操作系统会不断的给进程传入 异常信号 直到(寄存在寄存器内的异常被解决) <br>
+
+<br>
+
+### core dump 核心转储
+> 当进程 出现 某种异常 是否 由 操作系统将 进程在内存中的 核心数保持到磁盘中 <br>
+
+
 
 
 

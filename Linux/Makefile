@@ -1,12 +1,8 @@
 .PHONY: all
-all: Mytest Mytest2
+all: Mytest 
 
 
-Mytest:System_v_1.cc
-	g++ -o $@ $^ 
-
-
-Mytest2:System_v_2.cc
+Mytest:signal.cc
 	g++ -o $@ $^ 
 
 
@@ -16,4 +12,4 @@ Mytest2:System_v_2.cc
 
 .PHONY:clean
 clean:
-	rm -f Mytest Mytest2 
+	rm -f Mytest  
