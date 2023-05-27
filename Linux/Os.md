@@ -781,18 +781,41 @@ IPC_EXCL: 与IPC_CREAT 一起使用，  创建一个共享内存， 如果已经
 > * 进程 必须 识别信号 处理信号 存储信号 的能力 <br> 
 > * 一般而言信号的产生相对进程来说是 **异步**的 <br>
 > * **信号处理**: <br>
-> * 1. 默认处理 (进程自带) <br>
-> * 2. 忽略 <br>
+> * 1. 默认处理 (进程自带) `signal(signum, SIG_DFL)`使用 语言提供的 宏来达到 默认处理信号<br>
+> * 2. 忽略 `signal(signum, SIG_IGN)` 使用 语言提供的 宏来达到 忽略信号<br>
 > * 3. 自定义处理 (捕捉信号) <br>
 > * **常见信号**: <br>
 > * 1. kill -l 显示linux 内 内置的信号 <br>
 > * **信号发送的本质是 操作系统 把 信号信息写进进程的PCB 结构体内(信号位图) <br>
 
-
 2. 如何使用
 `signal 函数` **修改**进程对后续进程的处理动作 <br>
 > sighandler_t signal(int signum, sighandler_t handler) <br>
 > signum: 信号编号数值. handler: 自定义处理方法 `void handler(signum)` <br>
+`sigaction 函数` 
+```cpp
+int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact) 
+
+struct sigaction {
+    void (*handler)(int); // 自定义函数
+    sigset_t sa_mask; // 处理信号过程中 Os 收到相同的 信号是 会 自动 阻塞这些信号。 sa_mask 用来想除了阻塞当前信号外 还想阻塞其他 信号 来用sa_mask 来说明
+                      // 当信号处理完毕 后Os 会自动将 信号屏蔽字恢复 到原来的 状态
+}
+
+signum：要被捕捉的 信号
+act: 对信号进行的 新的处理动作
+oldact: 旧的处理动作
+
+
+usage:
+struct sigaction act, oldact;
+act.sa_flags = 0;
+sigemptyset(&act.sa_mask);
+act.sa_handler = handler;
+
+sigaction(2, &act, nullptr);
+```
+
 
 `int kill(pid_t pid, int sig)`通过系统调用接口 向进程发送信号 <br>
 `int raise(int sig)` 给自己发送指定的 信号 <br>
@@ -858,9 +881,55 @@ int main() {
 > 信号在 传递到 递达之间的 状态 叫做 信号未决 <br>
 > 操作系统 可以 选择阻塞 某个信号， 使信号一直处于 信号未决 状态 ， 直到操作系统解除对该信号的阻塞 <br>
 
+<br>
+
+
+### 对信号集 进行操作
+
+> 信号被处理的历程: <br>
+> 1. 查看block 表 信号是否被block <br>
+> 2. 查看 pending 表 信号是否送达  <br>
+> 3. 调用对应的 handler 方法 对信号进行处理 <br>
+
+
+* 系统调用接口 <br>
+
+对pending 进行操作 <br>
+1. int sigpending(sigset_t *set) 获取 pending 位图 <br>
+2. 对 set 对象指向的 位图 结构 进行操作 <br>
+* int sigemptyset(sigset_t *set) 把对应的 位图 进行 清空 <br>
+* int sigfillset(sigset_t *set) 把对应的 位图用 1 填满 <br>
+* int sigaddset(sigset_t *set, int signum) 把位图 对应的信号位置 设置 为 1 <br>
+* int sigdelset(sigset_t *set, int signum) 把位图 对应的信号位置 设置 为 0 <br>
+* int sigismember(const sigset_t *set, int signum) 检查 位图 内是否 存在 该信号 <br>
+
+
+对block 进行操作 <br>
+int sigprocmask(int how, sigset_t* set, sigset_t* oldset) <br> 
+The behavior of the call is dependent on the value of how, as follows ： <br>
+1. SIG_BLOCK: 当前 的 block set | set <br>
+2. SIG_UNBLOCK: 当前的 block set & ~set <br>
+3. SIG_SETMASK: 用 set 覆盖当前的 block set <br>
+If oldset is non-NULL, the previous value of the signal mask is stored in oldset. <br>
+
+
+
+### 内核态 用户态 
+信号 字段 是 存储 在 PCB 结构体 内， 要获取 和 处理 信号需要 内核 来操作 (内核态)<br>
+1. 用户态 --> 内核态 <br> 
+> * 用户 需要 访问 用户没有权限(或没有能力)访问的 资源 <br>
+2. 内核态 --> 用户态 <br>
+> * 用户需要处理的 工作没有处理完 <br>
+
+**从内核态返回用户态时 Os 会进行信号检测和 处理** <br>
+
+### 信号捕捉
+信号捕捉流程 :<br>
+![img](signal_catching.png) <br>
 
 <br>
 
+<!-- ### 在信号角度 看待 C/C++ 关键字：volatile  -->
 
 
 
