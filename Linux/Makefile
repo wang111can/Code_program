@@ -2,8 +2,8 @@
 all: Mytest 
 
 
-Mytest:signal.cc
-	g++ -o $@ $^ -O3
+Mytest:thread.cc
+	g++ -o $@ $^ -l pthread
 
 
 #$@ 表示生成文件 $^ 表示 依赖文件

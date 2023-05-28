@@ -875,7 +875,7 @@ int main() {
 
 
 
-## 阻塞信号
+### 阻塞信号
 1. 信号常见的 其他相关概念 <br>
 > 实施执行 对应信号的 处理动作称为信号递达 <br>
 > 信号在 传递到 递达之间的 状态 叫做 信号未决 <br>
@@ -929,7 +929,83 @@ If oldset is non-NULL, the previous value of the signal mask is stored in oldset
 
 <br>
 
+### SIGCHLD 
+
+> 子进程退出时发出的信号, 默认处理方式为忽略 <br>
+```cpp
+void handler(int x) {
+    while (waitpid(-1, nullptr, WNOHANG) > 0) {
+        cout << "quit" << endl;
+    }
+}
+
+int main()
+{   
+
+    signal(SIGCHLD, handler);
+
+    for (int i = 0;i < 10;i ++ ) {
+            pid_t id = fork();
+            if (id == 0) {
+                sleep(10);
+                exit(0);
+            }
+    }
+    while (1) {
+
+    }
+}
+```
+
 <!-- ### 在信号角度 看待 C/C++ 关键字：volatile  -->
+
+
+
+# 线程
+**Linux 内实际上是没有线程结构的 是使用PCB来模拟线程结构** <br>
+
+创建多个PCB 指向同一个进程的 进程地址 空间 <br>
+线程在 进程 内部执行，是 Os 调度的 基本单位 <br>
+线程在进程的地址空间内运行 <br>
+**每一个 task_struct 是一个进程内部的执行流** <br>
+
+
+
+### 操作
+头文件 pthread.h 在编译时 需要加上选项: -l pthread
+
+> `int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)` <br>
+> pthread_t *thread: 线程id <br>
+> const pthread_attr_t *attr: 线程特性, 为空 时采取默认动作 <br>
+> void *(*start_routine) (void *): 回调函数 <br>
+> void *arg: 回调函数参数 <br>
+
+
+```cpp
+
+void* thread_func(void * x) {
+    while (1) {
+        cout << (char*) x << ' ' << "thread pid: " << getpid() << endl;
+        sleep(1);
+    }
+}
+
+int main() {   
+
+    pthread_t thread[5];
+    char arg[1024];
+    for (int i = 0;i < 5;i ++ ) {
+        snprintf(arg, 1024, "%s%d", "thread was create: id ", i);
+        pthread_create(&thread[i], nullptr, thread_func, (void*)arg); 
+        sleep(1);
+    }
+    while (1) {
+        cout << "main pid: " <<  getpid() << endl;
+        sleep(5);
+    }
+}
+
+```
 
 
 

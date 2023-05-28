@@ -16,34 +16,30 @@
 
 using namespace std;
 
-int cnt = 0;
+vector<int> pids;
 
-void handler(int signum) {
-    cout << "catching signum: " << signum << endl; 
-    sleep(10);
+void handler(int x) {
+    while (waitpid(-1, nullptr, WNOHANG) > 0) {
+        cout << "quit" << endl;
+    }
 }
-
-
-class t {
-
-private:
-    int _x;
-public:
-    t(int x = 0):_x(x) {
-
-    }
-    int get_x() {
-        return _x;
-    }
-
-};
 
 int main()
 {   
 
-    void *test;
-    test = (t*)malloc(sizeof(t));
-    cout << (*((t*)test)).get_x() << endl;
+    signal(SIGCHLD, handler);
+
+    for (int i = 0;i < 10;i ++ ) {
+            pid_t id = fork();
+            if (id == 0) {
+                sleep(10);
+                exit(0);
+            }
+    }
+    while (1) {
+
+    }
+
 
     // struct sigaction act, oldact;
     // act.sa_flags = 0;
