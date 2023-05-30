@@ -962,6 +962,18 @@ int main()
 
 
 # 线程
+
+**与进程的区别**
+> * 进程是资源分配的基本单位 <br>
+> * 线程是调度的基本单位 <br>
+> * 线程共享 数据，但也拥有 自己的 部分数据：<br>
+> * * 线程ID <br>
+> * * 一组寄存器 <br>
+> * * 栈 <br>
+> * * errno <br>
+> * * 信号屏蔽字 <br>
+> * * 调度优先级 <br>
+
 **Linux 内实际上是没有线程结构的 是使用PCB来模拟线程结构** <br>
 
 创建多个PCB 指向同一个进程的 进程地址 空间 <br>
@@ -974,11 +986,20 @@ int main()
 ### 操作
 头文件 pthread.h 在编译时 需要加上选项: -l pthread
 
+**创建线程**
 > `int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)` <br>
 > pthread_t *thread: 线程id <br>
 > const pthread_attr_t *attr: 线程特性, 为空 时采取默认动作 <br>
 > void *(*start_routine) (void *): 回调函数 <br>
 > void *arg: 回调函数参数 <br>
+
+> `pthread_self()` 获取 自己的线程id <br>
+
+> __thread 修饰全局变量， 让每个线程 对该变量的 操作互不影响
+
+
+**线程id pthread_t**
+> 本质是一个地址, 对应着 存储线程数据的数据结构 在 库内的 起始地址 <br>
 
 
 ```cpp
@@ -1008,8 +1029,52 @@ int main() {
 ```
 
 
+**thread** C++ 库 <br>
 
 
 
 
+### 线程控制
 
+
+1. 等待线程 <br>
+`int pthread_join(pthread_t thread, void **retval) `: 阻塞等待新线程结束 <br>
+```cpp
+
+void* thread_func(void * x) {
+    for (int i = 0;i < 5;i ++ ) {
+        sleep(1);
+    }
+    return (void*)10;
+}
+
+int main() {   
+
+    pthread_t thread_id;
+
+    pthread_create(&thread_id, nullptr, thread_func, (void*)"thread 1");
+     
+    void *ret = nullptr;
+    pthread_join(thread_id, &ret);
+    // res = (void*)10 
+    // (long long) res = 10 
+    printf("wait finish %d\n", (long long)ret);
+}
+```
+
+2. 终止线程 <br>
+`void pthread_exit(void *retval)`: 在线程内部调用， retval 做为返回值 <br>
+`int pthread_cancel(pthread_t thread)`: 结束指定线程, 返回值设为 -1 <br>
+
+
+
+
+3. 分离线程
+`int pthread_detach(pthread_t thread)`: 标记 线程， 当线程结束时系统自动释放 线程资源 <br>
+
+
+
+### 线程互斥
+1. 临界资源:多线程执行流共享的资源就叫做临界资源 
+
+2. 
