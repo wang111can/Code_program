@@ -21,29 +21,47 @@
 
 using namespace std;
 
-void* thread_func(void * x) {
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; 
+
+int ticket = 10000;
+
+void* thread_func(void * args) {
 
     // for (int i = 0;i < 3;i ++ ) {
     // }
-    pthread_cancel((pthread_t)x);
+    while (1) {
+        pthread_mutex_lock(&mutex);
+        if (ticket > 0) {
+            // usleep(1000);
+            cout << "pthread_id: " << pthread_self() << " ticket: "<< ticket << endl;
+            // fflush(stdout);
+            ticket -- ;
+            
+            pthread_mutex_unlock(&mutex);
+        }
+        else {
+            pthread_mutex_unlock(&mutex);
+            break;        
+        }
 
-    return (void*)10;
+    }
+
+    return nullptr;
 }
 
 int main() {   
 
-    pthread_t thread_id;
+    pthread_t thread_id[10];
     pthread_t id = pthread_self();
-    pthread_create(&thread_id, nullptr, thread_func, (void*)id);
-    for (int i = 0;i < 5;i ++ ) {
-        sleep(1);
-    }
-    pthread_cancel(thread_id);
+
+    for (int i = 0;i < 10;i ++ )
+        pthread_create(&thread_id[i], nullptr, thread_func, nullptr);
+
+    while (1) {}
     void *ret = nullptr;
-    pthread_join(thread_id, &ret);
+    // pthread_join(thread_id, &ret);
     // res = (void*)10 
     // (long long) res = 10 
-    printf("wait finish %d\n", (long long)ret);
 
 
     // pthread_t thread[5];

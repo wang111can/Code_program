@@ -1075,6 +1075,68 @@ int main() {
 
 
 ### 线程互斥
-1. 临界资源:多线程执行流共享的资源就叫做临界资源 
+#### 进程线程间的互斥相关背景概念
+> 临界资源：多线程执行流共享的资源就叫做临界资源 <br>
+> 临界区：每个线程内部，访问临界资源的代码，就叫做临界区 <br>
+> 互斥：任何时刻，互斥保证有且只有一个执行流进入临界区，访问临界资源，通常对临界资源起保护作用 <br>
+> 原子性：不会被任何调度机制打断的操作，该操作只有两态，要么完成，要么未完成 <br>
+#### 互斥量mutex
+> 大部分情况，线程使用的数据都是局部变量，变量的地址空间在线程栈空间内，这种情况，变量归属单个 线程，其他线程无法获得这种变量。
+> 但有时候，很多变量都需要在线程间共享，这样的变量称为共享变量，可以通过数据的共享，完成线程之间的交互。多个线程并发的操作共享变量，会带来一些问题 <br>
 
-2. 
+
+**互斥操作**
+
+1. 互斥锁 <br>
+初始化锁: 
+   1. `int pthread_mutex_init(pthread_mutex_t  *restrict mutex, const pthread_mutex_t  *restrict attr)`: 包含临界资源 <br>
+   2. pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER <br>
+
+
+2. 加锁保护 <br>
+    1. `int pthread_mutex_lock(pthread_mutex_t *mutex)` <br>
+    2. `int pthread_mutex_trylock(pthread_mutex_t *mutex)` <br>
+    3. `int pthread_mutex_unlock(pthread_mutex_t *mutex)` <br>
+usage: 放在 临界 区前，这个函数将只允许 同一时间内一个线程 通过该函数去执行后续代码 <br>
+
+3. 销毁互斥锁 <br>
+`int pthread_mutex_destory(pthread_mutex_t  *restrict mutex)`: 与 pthread_mutex_init 成对使用 <br>
+
+
+```cpp
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; 
+
+int ticket = 10000;
+
+void* thread_func(void * args) {
+
+    while (1) {
+        pthread_mutex_lock(&mutex);
+        if (ticket > 0) {
+            // usleep(1000);
+            cout << "pthread_id: " << pthread_self() << " ticket: "<< ticket << endl;
+            // fflush(stdout);
+            ticket -- ;
+            
+            pthread_mutex_unlock(&mutex);
+        }
+        else {
+            pthread_mutex_unlock(&mutex);
+            break;        
+        }
+
+    }
+
+    return nullptr;
+}
+```
+
+
+
+
+4. 死锁 <br>
+死锁是指在一组进程中的各个进程**均占有不会释放的资源**，但因互相**申请被其他进程所站用不会释放的资源**而处于的一种**永久等待状态**。
+
+
+
